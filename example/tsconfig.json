@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "MyComponent": ["../src"]
+    }
+  },
+  "include": [
+    "../src/**/*",
+    "../example/**/*"
+  ]
+}
