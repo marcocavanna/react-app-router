@@ -35,7 +35,7 @@
     // https://www.typescriptlang.org/v2/tsconfig#jsx
     "jsx": "react",
 
-    // All implementation files must be modules (which means it has some form of import/export)
+    // All implementation files must be components (which means it has some form of import/export)
     // https://www.typescriptlang.org/v2/tsconfig#isolatedModules
     "isolatedModules": true,
 
@@ -109,7 +109,7 @@
     // https://www.typescriptlang.org/v2/tsconfig#forceConsistentCasingInFileNames
     "forceConsistentCasingInFileNames": true,
 
-    // Allows importing modules with a ‘.json’ extension,
+    // Allows importing components with a ‘.json’ extension,
     // which is a common practice in node projects
     // https://www.typescriptlang.org/v2/tsconfig#resolveJsonModule
     "resolveJsonModule": true,
