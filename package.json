@@ -26,12 +26,12 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && npm run lint",
     "build": "rollup -c ./rollup/rollup.config.js",
     "build:prettier": "prettier --config .prettierrc --write \"dist/**/*{.js,.ts}\"",
     "build:declaration": "tsc -p tsconfig.declaration.json",
     "postbuild": "npm run build:declaration && npm run build:prettier",
-    "start": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack-dev-server --progress",
+    "start": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" NODE_ENV=development WEBPACK_LIVE_SERVER=1 webpack-dev-server --progress",
     "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts'",
     "prepare-development": "yarn install && yarn add -P react react-dom @types/react @types/react-dom"
   },

@@ -20,9 +20,9 @@ export default {
 
   /** Define default module resolution */
   resolve: {
-    modules    : ['node_modules', resolve(__dirname, 'example')],
-    extensions : ['.ts', '.tsx', '.js', '.jsx', '.json', '.scss'],
-    alias: {
+    modules   : [ 'node_modules', resolve(__dirname, 'example') ],
+    extensions: [ '.ts', '.tsx', '.js', '.jsx', '.json', '.scss' ],
+    alias     : {
       MyComponent: resolve(__dirname, 'src')
     }
   },
@@ -34,8 +34,8 @@ export default {
 
   /** Define build target */
   output: {
-    path     : resolve(__dirname, 'compiled_example'),
-    filename : 'lib/[name].bundle.js'
+    path    : resolve(__dirname, 'compiled_example'),
+    filename: 'lib/[name].bundle.js'
   },
 
   /** Define the compilation mode */
@@ -45,8 +45,8 @@ export default {
 
   /** Remove node dependencies for web */
   node: {
-    child_process : 'empty',
-    fs            : 'empty'
+    child_process: 'empty',
+    fs           : 'empty'
   },
 
   stats: 'normal',
@@ -61,27 +61,30 @@ export default {
   plugins: [
     /** AutoInject into HTML */
     new HtmlWebpackPlugin({
-      title    : 'Component Example',
-      template : 'index.ejs',
-      filename : 'index.html',
-      base     : '/'
+      title   : 'Component Example',
+      template: 'index.ejs',
+      filename: 'index.html',
+      base    : '/'
     }),
 
     /** Detect Circular Dependency */
     new CircularDependencyPlugin({
-      exclude     : /node_modules/,
-      failOnError : true,
-      cwd         : process.cwd()
+      exclude    : /node_modules/,
+      failOnError: true,
+      cwd        : process.cwd()
     }),
 
     /** Define NODE_ENV */
     new DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV === 'development' ? 'development' : 'production')
+      'process.env.NODE_ENV'           : JSON.stringify(process.env.NODE_ENV === 'development'
+        ? 'development'
+        : 'production'),
+      'process.env.WEBPACK_LIVE_SERVER': JSON.stringify(process.env.WEBPACK_LIVE_SERVER)
     }),
 
     /** Extract CSS */
     new MiniCssExtractPlugin({
-      filename       : 'style/[name].bundle.css'
+      filename: 'style/[name].bundle.css'
     })
   ],
 
@@ -92,25 +95,25 @@ export default {
       /** Use HTML */
       {
         test: /\.htm(l?)$/,
-        use: [
+        use : [
           'html-loader'
         ]
       },
 
       /** Compile Typescript */
       {
-        test    : /\.ts(x?)$/,
-        exclude : /node_modules/,
-        use     : [
+        test   : /\.ts(x?)$/,
+        exclude: /node_modules/,
+        use    : [
           'ts-loader'
         ]
       },
 
       /** Enforce SourceMap processing */
       {
-        test    : /\.js$/,
-        enforce : 'pre',
-        loader  : 'source-map-loader'
+        test   : /\.js$/,
+        enforce: 'pre',
+        loader : 'source-map-loader'
       },
 
       /** Append extra SCSS rules */
@@ -125,10 +128,10 @@ export default {
           MiniCssExtractPlugin.loader,
 
           {
-            loader: 'css-loader',
+            loader : 'css-loader',
             options: {
-              modules: false,
-              sourceMap: process.env.NODE_ENV === 'development',
+              modules      : false,
+              sourceMap    : process.env.NODE_ENV === 'development',
               importLoaders: 2
             }
           },
@@ -136,7 +139,7 @@ export default {
           'postcss-loader',
 
           {
-            loader: 'sass-loader',
+            loader : 'sass-loader',
             options: {
               sourceMap: process.env.NODE_ENV === 'development'
             }
@@ -146,23 +149,23 @@ export default {
 
       }
 
-    ],
+    ]
 
   },
 
   /** Set Dev Server configuration */
   devServer: {
     historyApiFallback: true,
-    host: '127.0.0.1',
-    hot: true,
-    https: true,
-    inline: true,
-    open: true,
-    overlay: {
-      errors: true,
+    host              : '127.0.0.1',
+    hot               : true,
+    https             : true,
+    inline            : true,
+    open              : true,
+    overlay           : {
+      errors  : true,
       warnings: false
     },
-    publicPath: '/'
+    publicPath        : '/'
   }
 
 } as Configuration & { devServer: WebServerConfiguration };
