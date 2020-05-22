@@ -5,10 +5,13 @@ import compose from 'recompose/compose';
 
 import slugify from 'slugify';
 
-import { isValidString } from 'utils';
+import isValidString from '../../utils/is-valid-string';
 
-import { RouteWatcherInternalProps, RouteWatcherProps } from './RouteWatcher.interfaces';
 import withAppRouter from '../../hoc/withAppRouter';
+
+import type { UnregisterCallback, Location } from 'history';
+
+import type { RouteWatcherInternalProps, RouteWatcherProps } from './RouteWatcher.interfaces';
 
 
 /* --------
@@ -28,56 +31,78 @@ class RouteWatcherBootstrap extends React.Component<RouteWatcherInternalProps> {
   /* --------
    * Internal Props
    * -------- */
-  private appMountNode: HTMLElement = this.props.appMountNode ?? document.body;
+  private htmlClassNameNode: HTMLElement = this.props.appendRouteClassNameTo ?? document.body;
 
   private _isMounted: boolean = false;
+
+  private locationUnlistener: UnregisterCallback | null = null;
+
+  private currPathName: string = '';
+
+  private currHash: string = '';
 
 
   /* --------
    * Handlers
    * -------- */
-  private handleRouteChange(prevPathName: string, currPathName: string) {
+  private handleRouteChange(nextPathName: string) {
+    /** Get the currPathName */
+    const { currPathName } = this;
+
+    /** Skip if equal */
+    if (currPathName === nextPathName) {
+      return;
+    }
+
     /** Get Props */
     const {
       onRouteChange,
       useRouteClassName,
       location,
-      history,
-      appRouter
+      history
     } = this.props;
 
     /** Check if must change the app mount node classes */
-    if (this.appMountNode && useRouteClassName) {
+    if (this.htmlClassNameNode && useRouteClassName) {
       /** Split paths */
-      const prevPathTree = (prevPathName && prevPathName.split('/')) || [];
       const currPathTree = (currPathName && currPathName.split('/')) || [];
+      const nextPathTree = (nextPathName && nextPathName.split('/')) || [];
 
       /** Remove previous classes */
-      if (prevPathTree.length) {
-        this.appMountNode.classList.remove(
-          ...prevPathTree.filter(isValidString).map(path => slugify(path).toLowerCase().trim())
+      if (currPathTree.length) {
+        this.htmlClassNameNode.classList.remove(
+          ...currPathTree.filter(isValidString).map(path => slugify(path).toLowerCase().trim())
         );
       }
 
       /** Add current paths */
-      if (currPathTree.length) {
-        this.appMountNode.classList.add(
-          ...currPathTree.filter(isValidString).map(path => slugify(path).toLowerCase().trim())
+      if (nextPathTree.length) {
+        this.htmlClassNameNode.classList.add(
+          ...nextPathTree.filter(isValidString).map(path => slugify(path).toLowerCase().trim())
         );
       }
     }
+
+    this.currPathName = nextPathName;
 
     /**
      * Call the routeChange handler if exists.
      * Stop the callback if component isn't mounted.
      */
     if (typeof onRouteChange === 'function' && this._isMounted) {
-      onRouteChange(appRouter.currentRoute, location, history);
+      onRouteChange(nextPathName, location, history);
     }
   }
 
 
-  private handleHashChange(prevHash: string, currentHash: string, internal?: boolean) {
+  private handleHashChange(nextPathName: string, nextHash: string) {
+    /** Get current hash */
+    const { currHash } = this;
+
+    if (currHash === nextHash || nextPathName !== this.currPathName) {
+      return;
+    }
+
     /** Get Props */
     const {
       onHashChange,
@@ -88,25 +113,34 @@ class RouteWatcherBootstrap extends React.Component<RouteWatcherInternalProps> {
     } = this.props;
 
     /** Check if must change the app mount node classes */
-    if (this.appMountNode && useRouteClassName) {
+    if (this.htmlClassNameNode && useRouteClassName) {
       /** Remove the first hash if exists */
-      if (prevHash) {
-        this.appMountNode.classList.remove(`${hashClassNamePrefix}${slugify(prevHash)}`);
+      if (currHash) {
+        this.htmlClassNameNode.classList.remove(`${hashClassNamePrefix}${slugify(currHash)}`);
       }
       /** If next hash exists, set the new classname */
-      if (currentHash) {
-        this.appMountNode.classList.add(`${hashClassNamePrefix}${slugify(currentHash)}`);
+      if (nextHash) {
+        this.htmlClassNameNode.classList.add(`${hashClassNamePrefix}${slugify(nextHash)}`);
       }
     }
+
+    /** Set the current hash */
+    this.currHash = nextHash;
 
     /**
      * Call the hashChange handler if exists
      * Stop the callback if component isn't mounted.
      */
-    if (typeof onHashChange === 'function' && !internal && this._isMounted) {
-      onHashChange(currentHash, location, history);
+    if (typeof onHashChange === 'function' && this._isMounted) {
+      onHashChange(nextHash, location, history);
     }
   }
+
+
+  handleLocationChange = (location: Location) => {
+    this.handleHashChange(location.pathname, location.hash);
+    this.handleRouteChange(location.pathname);
+  };
 
 
   /* --------
@@ -116,45 +150,30 @@ class RouteWatcherBootstrap extends React.Component<RouteWatcherInternalProps> {
     /** Set Mounted */
     this._isMounted = true;
 
-    /** Get Current Location */
+    /** Get current location */
     const {
-      location: { pathname, hash },
+      location,
+      history,
       fireEventOnMount
     } = this.props;
 
-    /** Launch event on mount */
+    /** Start a listener */
+    this.locationUnlistener = history.listen(this.handleLocationChange);
+
+    /** Check if must fire the event on component mount */
     if (fireEventOnMount) {
-      this.handleRouteChange('', pathname);
-
-      if (hash) {
-        this.handleHashChange('', hash);
-      }
-    }
-  }
-
-
-  componentDidUpdate(prevProps: RouteWatcherInternalProps) {
-    /** Get Current and Prev Location */
-    const { location: { pathname, hash } } = this.props;
-    const { location: { pathname: prevPathName, hash: prevHash } } = prevProps;
-
-    /** Check if route has changed */
-    if (prevPathName !== pathname) {
-      this.handleRouteChange(prevPathName, pathname);
-      this.handleHashChange(prevHash, hash, true);
-      return;
-    }
-
-    /** Check if only hash has changed */
-    if (prevHash !== hash) {
-      this.handleHashChange(prevHash, hash);
+      this.handleLocationChange(location);
     }
   }
 
 
   componentWillUnmount() {
-    /** Set Unmounted */
+    /** Set unmounted */
     this._isMounted = false;
+    /** Remove Listener */
+    if (this.locationUnlistener) {
+      this.locationUnlistener();
+    }
   }
 
 

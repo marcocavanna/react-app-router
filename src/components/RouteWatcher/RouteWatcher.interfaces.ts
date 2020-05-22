@@ -1,23 +1,22 @@
-import { RouteChildrenProps } from 'react-router-dom';
+import type { RouteChildrenProps } from 'react-router-dom';
 
-import { History, Location } from 'history';
+import type { History, Location } from 'history';
 
-import { AppRoute } from '../../interfaces';
-import { WithAppRouterProps } from '../../hoc';
+import type { WithAppRouterProps } from '../../hoc/withAppRouter';
 
 
 /** Exposed props by the Route Watcher Component */
 export interface RouteWatcherProps {
   /**
-   * Set manually the AppMount HTML Node, falling back to `<body>` element.
+   * Set manually the HTML Node where route classname are appended,
+   * falling back to `<body>` element.
+   *
    * This option will be considered only with `useRouteClassName`
    * to set the slugified classname of current route.
    *
-   * ---
-   *
    * Default to `document.body`
    */
-  appMountNode?: HTMLElement;
+  appendRouteClassNameTo?: HTMLElement;
 
   /** Fire the onRouteChange event on Component Mount */
   fireEventOnMount?: boolean;
@@ -43,7 +42,7 @@ export interface RouteWatcherProps {
    * will not be fired, even if hash has changed.
    * It will only be called internally to remove className if ´useRouteClassName´ is used.
    */
-  onRouteChange?(current: AppRoute, location: Location, history: History): void;
+  onRouteChange?(current: string, location: Location, history: History): void;
 
   /** Set the current route slug class on app mount node element */
   useRouteClassName?: boolean;

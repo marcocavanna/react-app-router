@@ -1,7 +1,7 @@
 import * as React from 'react';
 import invariant from 'tiny-invariant';
 
-import { AppRouterTools } from './app.router.context.interfaces';
+import type { AppRouterTools } from './app.router.context.interfaces';
 
 
 /* --------
@@ -29,17 +29,14 @@ function createAppRouterContext() {
     return value;
   }
 
-  return [ useAppRouterHook, appRouterContext.Provider, appRouterContext.Consumer, appRouterContext ] as const;
+  return [ useAppRouterHook, appRouterContext.Provider, appRouterContext.Consumer ] as const;
 }
 
 const [
   useAppRouter,
   AppRouterProvider,
-  AppRouterConsumer,
-  Context
+  AppRouterConsumer
 ] = createAppRouterContext();
-
-export default Context;
 
 export {
   useAppRouter,
