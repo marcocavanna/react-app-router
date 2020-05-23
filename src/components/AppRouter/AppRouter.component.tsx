@@ -440,7 +440,9 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
       return;
     }
 
-    this.forceUpdate(() => {
+    this.setState({
+      currentRoute: current
+    }, () => {
       /** Call external onRouteChange handler if exists */
       const { onRouteChange } = this.props;
 
