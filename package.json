@@ -1,8 +1,13 @@
 {
-  "name": "@appbuckets/typescript-react-component-boilerplate",
-  "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "name": "@appbuckets/app-router",
+  "version": "0.0.1",
+  "description": "An AppState and AppRoute wrapper of react-router-dom with AuthState",
+  "keywords": [
+    "react",
+    "router",
+    "routing",
+    "auth"
+  ],
   "main": "dist/lib/index.js",
   "module": "dist/module/index.js",
   "types": "dist/types/index.d.ts",
@@ -17,12 +22,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:marcocavanna/typescript-react-component-boilerplate.git"
+    "url": "git+https://github.com/marcocavanna/react-app-router.git"
   },
   "bugs": {
-    "url": "https://github.com:marcocavanna/typescript-react-component-boilerplate/issues"
+    "url": "https://github.com/marcocavanna/react-app-router/issues"
   },
-  "homepage": "https://github.com:marcocavanna/typescript-react-component-boilerplate#readme",
+  "homepage": "https://github.com/marcocavanna/react-app-router#readme",
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "npm run build",
@@ -36,11 +41,11 @@
     "prepare-development": "yarn install && yarn add -P react react-dom @types/react @types/react-dom"
   },
   "peerDependencies": {
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.8",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
+    "@types/react": "~16.9.35",
+    "@types/react-dom": "~16.9.8",
+    "react": "~16.13.1",
+    "react-dom": "~16.13.1",
+    "react-router-dom": "~5.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "11.0.2",
@@ -94,9 +99,6 @@
   },
   "dependencies": {
     "clsx": "^1.1.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0",
     "recompose": "^0.30.0",
     "slugify": "^1.4.0",
     "tiny-invariant": "^1.1.0"
