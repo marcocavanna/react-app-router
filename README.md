@@ -691,6 +691,7 @@ See the [open issues](https://github.com/marcocavanna/react-app-router/issues) f
 - [ ] SubRouting
 - [ ] Define Route in a more declarative way
 - [ ] TypeScript extended functionality
+- [ ] Style base example
 - [ ] More Examples
 
 
