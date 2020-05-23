@@ -43,7 +43,7 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
 
   static defaultProps = {
     hidePageWhileInitiallyLoading : true,
-    hidePageWhileLoading          : true,
+    hidePageWhileLoading          : false,
     routes                        : [],
     pageTitleSeparator            : ' | ',
     pageTitleWhileInitiallyLoading: 'Loading...'
