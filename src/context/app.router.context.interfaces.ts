@@ -63,10 +63,10 @@ export interface AppRouterTools {
   routeTo(route: string | AppRoute, params?: RouteParams, state?: History.LocationState): void;
 
   /** Route to default Private Page */
-  routeToDefaultPrivate(params?: RouteParams): void;
+  routeToDefaultPrivate(params?: RouteParams, state?: History.LocationState): void;
 
   /** Route to default Public Page */
-  routeToDefaultPublic(params?: RouteParams): void;
+  routeToDefaultPublic(params?: RouteParams, state?: History.LocationState): void;
 
   /** Set the new App Name */
   setAppName(nextAppName?: string | ((currentAppName: string) => string)): void;
