@@ -364,7 +364,7 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
     /** Destructure all Props */
     const {
       // Get Route Watcher Props
-      fireEventOnMount,
+      fireOnRouteChangeEventOnMount,
       hashClassNamePrefix,
       useRouteClassName,
       onHashChange,
@@ -422,7 +422,7 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
       routes,
       // Route Watcher Strict Props
       routeWatcherProps: {
-        fireEventOnMount,
+        fireOnRouteChangeEventOnMount,
         hashClassNamePrefix,
         useRouteClassName,
         onHashChange

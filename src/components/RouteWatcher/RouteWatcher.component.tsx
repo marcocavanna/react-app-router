@@ -23,8 +23,8 @@ class RouteWatcherBootstrap extends React.Component<RouteWatcherInternalProps> {
    * Default Component Props
    * -------- */
   static defaultProps = {
-    fireEventOnMount   : true,
-    hashClassNamePrefix: 'hash-'
+    fireOnRouteChangeEventOnMount: true,
+    hashClassNamePrefix          : 'hash-'
   };
 
 
@@ -154,14 +154,14 @@ class RouteWatcherBootstrap extends React.Component<RouteWatcherInternalProps> {
     const {
       location,
       history,
-      fireEventOnMount
+      fireOnRouteChangeEventOnMount
     } = this.props;
 
     /** Start a listener */
     this.locationUnlistener = history.listen(this.handleLocationChange);
 
     /** Check if must fire the event on component mount */
-    if (fireEventOnMount) {
+    if (fireOnRouteChangeEventOnMount) {
       this.handleLocationChange(location);
     }
   }

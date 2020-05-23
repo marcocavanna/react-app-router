@@ -19,7 +19,7 @@ export interface RouteWatcherProps {
   appendRouteClassNameTo?: HTMLElement;
 
   /** Fire the onRouteChange event on Component Mount */
-  fireEventOnMount?: boolean;
+  fireOnRouteChangeEventOnMount?: boolean;
 
   /**
    * Hash Class Prefix is a string prepended to current
