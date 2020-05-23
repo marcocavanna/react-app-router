@@ -252,7 +252,7 @@ ReactDOM.render(
 React AppRouter consists in 1 core components (the [`<AppRouter />`](#approuter-)), and some side useful components (like [`<AppLink />`](#applink-)).
 
 #### `<AppRouter />`
-The __AppRouter__ is the mandatory component to let the React AppRouter module work. It wraps, under the hooke the original [`<BrowserRouter />`](https://reacttraining.com/react-router/web/api/BrowserRouter) component from [react-router-dom].
+The __AppRouter__ is the mandatory component to let the React AppRouter module work. It wraps, under the hoods the original [`<BrowserRouter />`](https://reacttraining.com/react-router/web/api/BrowserRouter) component from [react-router-dom].
 
 Complete `props` description are defined in [`AppRouterProps`](#approuterprops) interface.
 
