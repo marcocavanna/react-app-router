@@ -14,7 +14,7 @@ export interface PageWrapperProps extends Omit<AppRoute, 'path'>,
 
   /** Assert Next Route */
   getNextRoute?(
-    props: PageWrapperProps,
+    props: AppRoute,
     appState: AppState,
     routeProps: RouteComponentProps<any, any, any>
   ): string | MandatoryRedirect;

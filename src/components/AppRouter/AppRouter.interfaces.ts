@@ -8,7 +8,6 @@ import type { ClassValue } from 'clsx';
 import type { RouteParams } from '../../context/app.router.context.interfaces';
 
 import type { RouteWatcherProps } from '../RouteWatcher/RouteWatcher.interfaces';
-import type { PageWrapperProps } from '../PageWrapper/PageWrapper.interfaces';
 
 import type AppRoute from '../../interfaces/AppRoute';
 import type AppState from '../../interfaces/AppState';
@@ -75,7 +74,7 @@ export interface AppRouterProps extends Partial<AppState>, Omit<RouteWatcherProp
    * continue without any side effects.
    */
   getNextRoute?(
-    props: PageWrapperProps,
+    props: AppRoute,
     appState: AppState,
     routeProps: RouteComponentProps<any, any, any>
   ): MandatoryRedirect;
@@ -156,40 +155,40 @@ export interface ExtraComponentProps {
   appState: AppState;
 }
 
-export type ExtraRouteComponent<P extends {} = {}> = React.ComponentType<P & ExtraComponentProps>;
+export type SideRouteComponent<P extends {} = {}> = React.ComponentType<P & ExtraComponentProps>;
 
 export interface AppRouterComponents {
   /**
    * Set the content to be displayed
    * under the router.
    */
-  Footer?: ExtraRouteComponent;
+  Footer?: SideRouteComponent;
 
   /**
    * Set the content to be displayed
    * above the router.
    */
-  Header?: ExtraRouteComponent;
+  Header?: SideRouteComponent;
 
   /**
    * The Initial Loader Component,
    * showed only when `isInitialLoading` state
    * has been set.
    */
-  InitialLoader?: ExtraRouteComponent;
+  InitialLoader?: SideRouteComponent;
 
   /**
    * The Loader Component,
    * showed when `isLoading` has been set
    */
-  Loader?: ExtraRouteComponent;
+  Loader?: SideRouteComponent;
 
   /**
    * Set the Navbar component.
    * This one is visible only if `hasNavbar` prop
    * on AppRouter has been set to `true`
    */
-  Navbar?: ExtraRouteComponent;
+  Navbar?: SideRouteComponent;
 
   /**
    * Set a custom NotFound element
@@ -203,7 +202,7 @@ export interface AppRouterComponents {
    * This one is visible only if `hasSidebar` prop
    * on AppRouter has been set to `true`
    */
-  Sidebar?: ExtraRouteComponent;
+  Sidebar?: SideRouteComponent;
 }
 
 export interface AppRouterState {

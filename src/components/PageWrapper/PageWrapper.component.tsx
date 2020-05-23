@@ -37,7 +37,9 @@ function PageWrapper(wrapperProps: PageWrapperProps): React.ReactElement<RoutePr
     path,
     exact,
     strict,
-    sensitive
+    sensitive,
+
+    ...restRouteProps
   } = wrapperProps;
 
   /** Compute extra props */
@@ -81,7 +83,13 @@ function PageWrapper(wrapperProps: PageWrapperProps): React.ReactElement<RoutePr
 
     /** Call the getNextRoute function first if exists */
     if (typeof getNextRoute === 'function') {
-      const userDefinedMandatoryRedirect = getNextRoute(wrapperProps, appState, routeProps);
+      const userDefinedMandatoryRedirect = getNextRoute({
+        isPrivate,
+        isPublic,
+        path     : path ?? '',
+        component: Component,
+        ...restRouteProps
+      }, appState, routeProps);
 
       if (userDefinedMandatoryRedirect) {
         if (typeof (userDefinedMandatoryRedirect as string) === 'string') {
