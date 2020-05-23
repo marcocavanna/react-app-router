@@ -122,7 +122,7 @@ const Articles = () => (
     <h3>This is an Hybrid page, visible to both authorized and unauthorized Users</h3>
     <hr />
     <div>
-      <h4>Here's some Articles</h4>
+      <h4>Here are some Articles to Read</h4>
       {[ 1, 2, 3 ].map(id => (
         <AppLink key={id} to={'ShowArticle'} params={{ id }}>
           <h5>Go to Article number {id}</h5>
@@ -225,7 +225,7 @@ const App = () => {
         Footer: () => (
           <React.Fragment>
             <hr />
-            <p>I'm a Static Footer Component, showed on Each Page</p>
+            <p>I am a Static Footer Component, showed on Each Page</p>
             <button onClick={handleToggleAuth}>
               {hasAuth ? 'Remove User Authorization' : 'Authorize User'}
             </button>
@@ -257,25 +257,25 @@ The __AppRouter__ is the mandatory component to let the React AppRouter module w
 Complete `props` description are defined in [`AppRouterProps`](#approuterprops) interface.
 
 Some principal AppRouter props are:
-- ##### `routes` : [`AppRoute[]`](#approute)
+##### `routes` : [`AppRoute[]`](#approute)
 > Define each single route. Check the AppRoute interface to get documentation on each prop to build your routing system.
 
-- ##### `defaultAppName?` : `string`
+##### `defaultAppName?` : `string`
 > Page title will be defined every time user route to a new page.
 >
 > Each route has is own title, but if you want you can provide a default AppTitle that will be prepended to single page title.
 
-- ##### `isInitiallyLoading?` : `boolean`
+##### `isInitiallyLoading?` : `boolean`
 > App State could be set to isInitiallyLoading to prevent page render while the App is starting.
 >
 > This is intended to show for example a full page loader on App Initialization.
 
-- ##### `isLoading?` : `boolean`
+##### `isLoading?` : `boolean`
 > App State could be set to isLoading any time, to show a loader component while performing some long/system functions.
 > 
 > This is intended to show for example a different loader while performing Login/Logout Operation.
 
-- ##### `userHasAuth?` : `boolean`
+##### `userHasAuth?` : `boolean`
 > Tell the AppRouter if current user has authorization to show a private page.
 >
 > Changing `userHasAuth` on private/public only page will automatically perform a mandatory redirect to default private/public page based on user auth.
@@ -298,25 +298,25 @@ Refer to [`AppLinkProps`](#applinkprops) interface.
 ### Hooks
 Hooks are used to manage routing, or get route state on function components.
 
-- #### `useAppState()` : [`AppState`](#appstate)
+#### `useAppState()` : [`AppState`](#appstate)
 > Get current app state
 
-- #### `useLayout()` : [`AppRouterLayout`](#approuterlayout)
+#### `useLayout()` : [`AppRouterLayout`](#approuterlayout)
 > Get the layout state for current route. This hook is used internally by PageWrapper, but exposed anyway for further usage.
 
-- #### `useAppName()` : `[string, changeName: ((newName?: string) => void), restoreDefault: () => void]`
+#### `useAppName()` : `[string, changeName: ((newName?: string) => void), restoreDefault: () => void]`
 > Return a set of three elements:
 >   - The current name of the App
 >   - A function to set a new name
 >   - A function to restore the name declared in [`defaultAppName`](#defaultappname--string) props of <AppRouter /> component
 
-- #### `useCurrentRoute()` : [`CurrentRoute`](#currentroute)
+#### `useCurrentRoute()` : [`CurrentRoute`](#currentroute)
 > Returns an object that describe the current routes, composed by:
 >   - `route` : [`AppRoute`](#approute) The current route object
 >   - `params` : `{}` Current params of route
 >   - `search` : `URLSearchParams` Search query string converted to [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
 
-- #### `useRouting()` : `UseRoutingTools`
+#### `useRouting()` : `UseRoutingTools`
 > Returns an object that contains useful route methods and properties:
 >   - `routeTo` : `(route: string | AppRoute, params?: {}, state?: LocationState) => void` Route to a path
 >   - `couldRouteTo` : `(route: string | AppRoute) => boolean` Check if a routing to `route` could be performed based on `userHasAuth`
@@ -326,7 +326,7 @@ Hooks are used to manage routing, or get route state on function components.
 >   - `defaultPrivateRoute` : [`AppRoute`](#approute) The default private route object
 >   - `defaultPublicRoute` : [`AppRoute`](#approute) The default public route object
 
-- #### `usePageTitle()` : `[string, changeTitle: ((newTitle?: string) => void)]`
+#### `usePageTitle()` : `[string, changeTitle: ((newTitle?: string) => void)]`
 > Return a set of two elements:
 >   - The current page title
 >   - A function to set a new page title
@@ -350,7 +350,7 @@ Interface describe below use the TypeScript syntax. A `props` or an `option` mar
 
 
 #### `AppRouterProps`
-- ##### `appendRouteClassNameTo?` : `HTMLElement`
+##### `appendRouteClassNameTo?` : `HTMLElement`
 > Set manually the HTML Node where route classname are appended, falling back to `<body>` element.
 >
 > When a location changed event, current route will be splitted into route tree and appended as className
@@ -363,95 +363,95 @@ Interface describe below use the TypeScript syntax. A `props` or an `option` mar
 >
 > Additionally, also the current hash will be used as className
 
-- ##### `browserRouterProps?` : [`BrowserRouterProps`](https://reacttraining.com/react-router/web/api/BrowserRouter)
+##### `browserRouterProps?` : [`BrowserRouterProps`](https://reacttraining.com/react-router/web/api/BrowserRouter)
 > Props passed to the wrapped `<BrowserRouter />` component.
 
-- ##### `components?` : [`SideRouteComponents`](#sideroutecomponents)
+##### `components?` : [`SideRouteComponents`](#sideroutecomponents)
 > A set of component rendered outside the wrapped page, like Sidebar, Navbar, Loader, ecc..
 >
 > Refer to linked interface to get each props.
 
-- ##### `defaultAppName?` : `string`
+##### `defaultAppName?` : `string`
 > Set the current AppName. This text will be used to create the App Title on each Page.
 
-- ##### `fireOnRouteChangeEventOnMount?` : `boolean`
+##### `fireOnRouteChangeEventOnMount?` : `boolean`
 > Choose if must fire the `onRouteChange` event handler on AppRouter mount.
 >
 > By default, this props is `true`
 
-- ##### `hashClassNamePrefix?` : `string`
+##### `hashClassNamePrefix?` : `string`
 > This string will pe prepended to current hash while setting the hash className.
 >
 > This option will be considered only with `useRouteClassName`
 >
 > By default, this props is `hash-`
 
-- ##### `hidePageWhileInitiallyLoading?` : `boolean`
+##### `hidePageWhileInitiallyLoading?` : `boolean`
 > Set if the Page Component must be hide while app state has `isInitiallyLoading` equal to true
 > 
 > By default, this props is `true`
 
-- ##### `hidePageWhileLoading?` : `boolean`
+##### `hidePageWhileLoading?` : `boolean`
 > Set if the Page Component must be hide while app state has `isLoading` equal to true
 > 
 > By default, this props is `false`
 
-- ##### `isInitiallyLoading?` : `boolean`
+##### `isInitiallyLoading?` : `boolean`
 > App State could be set to isInitiallyLoading to prevent page render while the App is starting.
 >
 > This is intended to show for example a full page loader on App Initialization.
 
-- ##### `isLoading?` : `boolean`
+##### `isLoading?` : `boolean`
 > App State could be set to isLoading any time, to show a loader component while performing some long/system functions.
 > 
 > This is intended to show for example a different loader while performing Login/Logout Operation.
 
-- ##### `innerClassNames?` : `{ pageClassNames?: ClassValue | ClassValue[], viewClassNames?: ClassValue | ClassValue[] }`
+##### `innerClassNames?` : `{ pageClassNames?: ClassValue | ClassValue[], viewClassNames?: ClassValue | ClassValue[] }`
 > Page Component will be wrapped by an outer <div class='view-content'>,
 > that contain all route elements (sidebar, header ...), and an inner <div class='page-content'> that wrap your page.
 >
 > If you want you can add any class to wrappers. Additional ClassName are merged together using `clsx` library.
 > Refer to [clsx] documentation to know what `ClassValue` is.
 
-- ##### `getNextRoute?` : `(props: AppRoute, appState: AppState, routeProps: RouteComponentProps) => string | null | MandatoryRedirect`
+##### `getNextRoute?` : `(props: AppRoute, appState: AppState, routeProps: RouteComponentProps) => string | null | MandatoryRedirect`
 > This function will be called after a location event occurred, but before the page rendering function.
 >
 > Use this function if you want to mandatory redirect a user to another page. You could return a string to refer directly
 > to a defined route, or an object (described on [`MandatoryRedirect`](#mandatoryredirect)), with route, params and state.
 
-- ##### `hasNavbar?` : `boolean`
+##### `hasNavbar?` : `boolean`
 > Set if AppRouter must render the `Navbar` component on page where Navbar has been enabled
 
-- ##### `hasSidebar?` : `boolean`
+##### `hasSidebar?` : `boolean`
 > Set if AppRouter must render the `Sidebar` component on page where Sidebar has been enabled
 
-- ##### `onHashChange?` : `(current: string, location: Location, history: History) => void`
+##### `onHashChange?` : `(current: string, location: Location, history: History) => void`
 > A handler callback invoked each time hash changed.
 
-- ##### `onRouteChange?` : `(current: AppRoute, location: Location, history: History) => void`
+##### `onRouteChange?` : `(current: AppRoute, location: Location, history: History) => void`
 > A handler callback invoked each time location changed.
 
-- ##### `routes` : [`AppRoute[]`](#approute)
+##### `routes` : [`AppRoute[]`](#approute)
 > Define each single route. Check the AppRoute interface to get documentation on each prop to build your routing system.
 
-- ##### `pageTitleWhileInitiallyLoading?` : `string`
+##### `pageTitleWhileInitiallyLoading?` : `string`
 > Set the Page Title used while app is in Initially Loading State
 
-- ##### `pageTitleWhileLoading?` : `string`
+##### `pageTitleWhileLoading?` : `string`
 > Set the Page Title used while app is in Loading State
 
-- ##### `pageTitleSeparator?` : `string`
+##### `pageTitleSeparator?` : `string`
 > Set the Page Title separator.
 > 
 > When the title inside <head> will change, computing function will use the current appName string,
 > and the current page title string: set this props to choose how the two names will be joined together.
 
-- ##### `userHasAuth?` : `boolean`
+##### `userHasAuth?` : `boolean`
 > Tell the AppRouter if current user has authorization to show a private page.
 >
 > Changing `userHasAuth` on private/public only page will automatically perform a mandatory redirect to default private/public page based on user auth.
 
-- ##### `useRouteClassName?` : `boolean`
+##### `useRouteClassName?` : `boolean`
 > Tell the AppRouter must append current route className to HTMLElement defined in `appendRouteClassNameTo`
 
 ---
@@ -459,25 +459,25 @@ Interface describe below use the TypeScript syntax. A `props` or an `option` mar
 #### `AppRoute`
 AppRoute interface is used to describe each single Route.
 
-- ##### `component` : `React.ComponentType<RouteComponentProps>`
+##### `component` : `React.ComponentType<RouteComponentProps>`
 > Is the component used to render the page at current route
 
-- ##### `exact?` : `boolean`
+##### `exact?` : `boolean`
 > Set if this route must be reached only if exact path has been typed by user.
 >
 > By default, value is `true`
 
-- ##### `hasNavbar?` : `boolean`
+##### `hasNavbar?` : `boolean`
 > Set the page has the Navbar component visible
 >
 > By default, value is `true` if route has `isPrivate` set to true
 
-- ##### `hasSidebar?` : `boolean`
+##### `hasSidebar?` : `boolean`
 > Set the page has the Sidebar component visible
 >
 > By default, value is `true` if route has `isPrivate` set to true
 
-- ##### `isDefault?` : `boolean | 'private' | 'public'`
+##### `isDefault?` : `boolean | 'private' | 'public'`
 > When the App start, or when `userHasAuth` prop changed, if current page
 > could not be reached by user, routing will fallback to default page
 > based on current `userHasAuth` prop.
@@ -485,7 +485,7 @@ AppRoute interface is used to describe each single Route.
 > For a hybrid page (when a page is both public and private) you could
 > manually set if current route is default for private or public routing
 
-- ##### `isPrivate?` : `boolean`
+##### `isPrivate?` : `boolean`
 > Set if the page is Private.
 > A Private page could be reached only when `userHasAuth` is true.
 > You could declare a page both private and public:
@@ -493,7 +493,7 @@ AppRoute interface is used to describe each single Route.
 >
 > Default is `false`
 
-- ##### `isPublic?` : `boolean`
+##### `isPublic?` : `boolean`
 > Set if the page is Public.
 > A Public page could be reached only when `userHasAuth` is false.
 > You could declare a page both private and public:
@@ -501,34 +501,34 @@ AppRoute interface is used to describe each single Route.
 >
 > Default is `false`
 
-- ##### `name` : `string`
+##### `name` : `string`
 > The unique page name
 
-- ##### `path` : `string`
+##### `path` : `string`
 > The page path
 >
 > Alert: `react-router-dom` will accept also an array of string. At the moment this is not accepted by AppRouter.
 
-- ##### `sensitive?` : `boolean`
+##### `sensitive?` : `boolean`
 > When true, will match if the path is case sensitive.
 
-- ##### `strict?` : `boolean`
+##### `strict?` : `boolean`
 > When true, a path that has a trailing slash will only match a location.pathname with a trailing slash.
 > This has no effect when there are additional URL segments in the location.pathname.
 
-- ##### `title?` : `string`
+##### `title?` : `string`
 > The page title, appended to current AppName
 
 ---
 
 #### `CurrentRoute`
-- ##### `route` : [`Readonly<AppRoute>`](#approute)
+##### `route` : [`Readonly<AppRoute>`](#approute)
 > The current Route object
 
-- ##### `params` : `{ [key: string]: string | number | boolean | undefined }`
+##### `params` : `{ [key: string]: string | number | boolean | undefined }`
 > Params used to reach current rout
 
-- ##### `search` : [`URLSearchParams`](#https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
+##### `search` : [`URLSearchParams`](#https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
 > Converted search query string to URLSearchParams object
 
 ---
@@ -553,27 +553,27 @@ A set of components used to render the whole app page.
 Each declared component receive as props the `appState` key, an object containing the current state of the app.
 Refer to [`AppState`](#appstate) interface to props description.
 
-- ##### `Footer?` : `React.ComponentType<{ appState: AppState }>`
+##### `Footer?` : `React.ComponentType<{ appState: AppState }>`
 > A content rendered under the Page
 
-- ##### `Header?` : `React.ComponentType<{ appState: AppState }>`
+##### `Header?` : `React.ComponentType<{ appState: AppState }>`
 > A content rendered above the Page, but under the Navbar (if present)
 
-- ##### `InitialLoader?` : `React.ComponentType<{ appState: AppState }>`
+##### `InitialLoader?` : `React.ComponentType<{ appState: AppState }>`
 > The component to render while app state has `isInitiallyLoading` equal to true
 
-- ##### `Loader?` : `React.ComponentType<{ appState: AppState }>`
+##### `Loader?` : `React.ComponentType<{ appState: AppState }>`
 > The component to render while app state has `isLoading` equal to true
 
-- ##### `Navbar?` : `React.ComponentType<{ appState: AppState }>`
+##### `Navbar?` : `React.ComponentType<{ appState: AppState }>`
 > The Navbar element, rendered on top of page.
 > Setting the Navbar component will not automatically show the Navbar element
 > until [`hasNavbar`](#hasnavbar--boolean) of AppRouter component is true.
 
-- ##### `NotFound?` : `React.ComponentType<{ appState: AppState }>`
+##### `NotFound?` : `React.ComponentType<{ appState: AppState }>`
 > Custom component page to show on NotFound page
 
-- ##### `Sidebar?` : `React.ComponentType<{ appState: AppState }>`
+##### `Sidebar?` : `React.ComponentType<{ appState: AppState }>`
 > The Sidebar element, rendered on left side of page.
 > Setting the Sidebar component will not automatically show the Sidebar element
 > until [`hasSidebar`](#hassidebar--boolean) of AppRouter component is true.
@@ -583,13 +583,13 @@ Refer to [`AppState`](#appstate) interface to props description.
 #### `MandatoryRedirect`
 This is an Object that could be returned by [`getNextRout()`](#getnextroute--props-approute-appstate-appstate-routeprops-routecomponentprops--string--null--mandatoryredirect) method to force routing to another page.
 
-- ##### `route` : `string | AppRoute`
+##### `route` : `string | AppRoute`
 > The new route
 
-- ##### `params?` : `{ [key: string]: string | number | boolean | undefined }`
+##### `params?` : `{ [key: string]: string | number | boolean | undefined }`
 > Params used to build the route
 
-- ##### `state?` : `LocationState`
+##### `state?` : `LocationState`
 > Location state passed to route
 
 ---
@@ -597,82 +597,82 @@ This is an Object that could be returned by [`getNextRout()`](#getnextroute--pro
 #### `AppLinkProps`
 __AppLink__ element extends each props of Link or NavLink element plus:
 
-- ##### `asNavLink?` : `boolean`
+##### `asNavLink?` : `boolean`
 > Render the element as a `<NavLink />` instead as a `<Link />`
 
-- ##### `params?` : `{ [key: string]: string | number | boolean | undefined }`
+##### `params?` : `{ [key: string]: string | number | boolean | undefined }`
 > Params passed to build the complete route
 
-- ##### `renderAnyway?` : `boolean`
+##### `renderAnyway?` : `boolean`
 > By default, a AppLink will be rendered only if current user could reach the requested route.
 > Eg. If a user has no auth, a link to a private route will not be rendered.
 >
 > Set this props to `true` if link must be rendered anyway
 
-- ##### `to` : `string`
+##### `to` : `string`
 > The Route Name to point
 
 ---
 
 #### `AppRouterTools`
-- ##### `appName?` : `string`
+##### `appName?` : `string`
 > Get the current AppName
 
-- ##### `appState` : [`Readonly<AppState>`](#appstate)
+##### `appState` : [`Readonly<AppState>`](#appstate)
 > Get the current AppState
 
-- ##### `currentRoute` : [`Readonly<CurrentRoute>`](#currentroute)
+##### `currentRoute` : [`Readonly<CurrentRoute>`](#currentroute)
 > Get the current Route and its params and search string
 
-- ##### `defaultPrivateRoute` : [`Readonly<AppRoute>`](#approute)
+##### `defaultPrivateRoute` : [`Readonly<AppRoute>`](#approute)
 > Get the default private defined route
 
-- ##### `defaultPublicRoute` : [`Readonly<AppRoute>`](#approute)
+##### `defaultPublicRoute` : [`Readonly<AppRoute>`](#approute)
 > Get the default public defined route
 
-- ##### `layout` : [`Readonly<AppRouterLayout>`](#approuterlayout)
+##### `layout` : [`Readonly<AppRouterLayout>`](#approuterlayout)
 > Get current layout settings
 
-- ##### `restoreAppName` : `() => void`
+##### `restoreAppName` : `() => void`
 > Restore the default app name defined in <AppRouter />
 
-- ##### `couldRouteTo` : `(route?: AppRoute) => void`
+##### `couldRouteTo` : `(route?: AppRoute) => void`
 > Check if a route could be performed to a page
 
-- ##### `routeTo` : `(route: string | AppRoute, params?: {}, state?: LocationState) => void`
+##### `routeTo` : `(route: string | AppRoute, params?: {}, state?: LocationState) => void`
 > Route to a page by name
 
-- ##### `routeToDefaultPrivate` : `(params?: {}, state?: LocationState) => void`
+##### `routeToDefaultPrivate` : `(params?: {}, state?: LocationState) => void`
 > Route to default private page
 
-- ##### `routeToDefaultPublic` : `(params?: {}, state?: LocationState) => void`
+##### `routeToDefaultPublic` : `(params?: {}, state?: LocationState) => void`
 > Route to default public page
 
-- ##### `setAppName` : `(nextAppName?: string | ((currentAppName?: string)) => string | undefined) => void`
+##### `setAppName` : `(nextAppName?: string | ((currentAppName?: string)) => string | undefined) => void`
 > Set a new App Name
 
-- ##### `setPageTitle` : `(pageTitle?: string) => void`
+##### `setPageTitle` : `(pageTitle?: string) => void`
 > Set a new page Title
 
 ---
 
 #### `AppRouterLayout`
-- ##### `hasNavbar?` : `boolean`
+##### `hasNavbar?` : `boolean`
 > Check if current route has navbar visible
 
-- ##### `hasSidebar?` : `boolean`
+##### `hasSidebar?` : `boolean`
 > Check if current route has sidebar visible
 
-- ##### `hidePageWhileInitiallyLoading?` : `boolean`
+##### `hidePageWhileInitiallyLoading?` : `boolean`
 > Check if current page must be hide if app is in initially loading state
 
-- ##### `hidePageWhileLoading?` : `boolean`
+##### `hidePageWhileLoading?` : `boolean`
 > Check if current page must be hide if app is in loading state
 
-- ##### `pageTitleWhileInitiallyLoading?` : `string`
+##### `pageTitleWhileInitiallyLoading?` : `string`
 > Get the page title to set while app is in initially loading state
 
-- ##### `pageTitleWhileLoading?` : `string`
+##### `pageTitleWhileLoading?` : `string`
 > Get the page title to set while app is in loading state
 
 
