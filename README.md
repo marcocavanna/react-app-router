@@ -13,7 +13,7 @@
     <a href="https://github.com/marcocavanna/react-app-router"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/marcocavanna/react-app-router/examples">View Demo</a>
+    <a href="https://github.com/marcocavanna/react-app-router/tree/master/example">View Demo</a>
     ·
     <a href="https://github.com/marcocavanna/react-app-router/issues">Report Bug</a>
     ·
