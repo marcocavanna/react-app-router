@@ -21,7 +21,7 @@
   </p>
 </p>
 
-The React AppRouter module is a series of components built on top of react-router-dom [react-router-dom] library.
+The React AppRouter module is a series of components built on top of [react-router-dom] library.
 
 I've written this library to easy manage routing for auth based app, enforcing route by checking the user auth state and easily manage loading state while performing actions (like loading the client, the initial user data before app start, and so on).
 
@@ -243,6 +243,9 @@ ReactDOM.render(
 );
 ```
 
+<br />
+
+---
 
 ## Usage
 ### Components
@@ -277,8 +280,9 @@ Some principal AppRouter props are:
 >
 > Changing `userHasAuth` on private/public only page will automatically perform a mandatory redirect to default private/public page based on user auth.
 
+---
 
-#### <AppLink />
+#### `<AppLink />`
 __AppLink__ component is a wrapper for [Link](https://reacttraining.com/react-router/web/api/Link) or [NavLink](https://reacttraining.com/react-router/web/api/NavLink) elements of [react-router-dom] library.
 
 Additionally, the Link elements will be rendered only if current user could reach that route, based on [`userHasAuth`](#userhasauth--boolean) state of parent AppRouter.
@@ -287,6 +291,9 @@ AppLink extends all props defined in Link or NavLink element, except for the `to
 
 Refer to [`AppLinkProps`](#applinkprops) interface.
 
+<br />
+
+---
 
 ### Hooks
 Hooks are used to manage routing, or get route state on function components.
@@ -324,6 +331,9 @@ Hooks are used to manage routing, or get route state on function components.
 >   - The current page title
 >   - A function to set a new page title
 
+<br />
+
+---
 
 ### HOC
 An only High Order Component is provided
@@ -331,6 +341,9 @@ An only High Order Component is provided
 #### `withAppRouter`
 Wrapping a component with this HOC will produce a new component with `appRouter` props. Refer to [`AppRouterTools`](#approutertools) to check how its composed.
 
+<br />
+
+---
 
 ### Interfaces
 Interface describe below use the TypeScript syntax. A `props` or an `option` marked by `?` char is considered as optional.
@@ -441,6 +454,7 @@ Interface describe below use the TypeScript syntax. A `props` or an `option` mar
 - ##### `useRouteClassName?` : `boolean`
 > Tell the AppRouter must append current route className to HTMLElement defined in `appendRouteClassNameTo`
 
+---
 
 #### `AppRoute`
 AppRoute interface is used to describe each single Route.
@@ -505,6 +519,7 @@ AppRoute interface is used to describe each single Route.
 - ##### `title?` : `string`
 > The page title, appended to current AppName
 
+---
 
 #### `CurrentRoute`
 - ##### `route` : [`Readonly<AppRoute>`](#approute)
@@ -516,6 +531,7 @@ AppRoute interface is used to describe each single Route.
 - ##### `search` : [`URLSearchParams`](#https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
 > Converted search query string to URLSearchParams object
 
+---
 
 #### `AppState`
 The current state of App, represented by
@@ -529,6 +545,7 @@ The current state of App, represented by
 - `userHasAuth` : `boolean`
 > Get if current user has auth
 
+---
 
 #### `SideRouteComponents`
 A set of components used to render the whole app page.
@@ -561,6 +578,7 @@ Refer to [`AppState`](#appstate) interface to props description.
 > Setting the Sidebar component will not automatically show the Sidebar element
 > until [`hasSidebar`](#hassidebar--boolean) of AppRouter component is true.
 
+---
 
 #### `MandatoryRedirect`
 This is an Object that could be returned by [`getNextRout()`](#getnextroute--props-approute-appstate-appstate-routeprops-routecomponentprops--string--null--mandatoryredirect) method to force routing to another page.
@@ -574,6 +592,7 @@ This is an Object that could be returned by [`getNextRout()`](#getnextroute--pro
 - ##### `state?` : `LocationState`
 > Location state passed to route
 
+---
 
 #### `AppLinkProps`
 __AppLink__ element extends each props of Link or NavLink element plus:
@@ -593,6 +612,7 @@ __AppLink__ element extends each props of Link or NavLink element plus:
 - ##### `to` : `string`
 > The Route Name to point
 
+---
 
 #### `AppRouterTools`
 - ##### `appName?` : `string`
@@ -634,6 +654,7 @@ __AppLink__ element extends each props of Link or NavLink element plus:
 - ##### `setPageTitle` : `(pageTitle?: string) => void`
 > Set a new page Title
 
+---
 
 #### `AppRouterLayout`
 - ##### `hasNavbar?` : `boolean`
@@ -655,11 +676,22 @@ __AppLink__ element extends each props of Link or NavLink element plus:
 > Get the page title to set while app is in loading state
 
 
+<br />
+
+---
+
 ## TypeScript Usage
 
+> - [ ] : TODO
 
 ## Roadmap
 See the [open issues](https://github.com/marcocavanna/react-app-router/issues) for a list of proposed features (and known issues).
+
+### ToDo
+- [ ] SubRouting
+- [ ] Define Route in a more declarative way
+- [ ] TypeScript extended functionality
+- [ ] More Examples
 
 
 ## Contributing
