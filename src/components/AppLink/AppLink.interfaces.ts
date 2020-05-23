@@ -16,7 +16,7 @@ export interface AppLinkProps<T extends string = string> extends Omit<NavLinkPro
    * only if current user could reach the
    * requested route.
    * If a user has no auth, a link to a private
-   * route will no be rendered.
+   * route will not be rendered.
    *
    * Set this props to `true` if link must be
    * rendered anyway

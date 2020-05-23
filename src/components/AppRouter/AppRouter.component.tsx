@@ -71,8 +71,8 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
      * Default value is true only for private page
      */
     const {
-      hasNavbar : pageHasNavbar = !!(currentRoute?.isPrivate),
-      hasSidebar: pageHasSidebar = !!(currentRoute?.isPrivate)
+      hasNavbar : pageHasNavbar = !!(currentRoute?.isPrivate && !currentRoute?.isPublic),
+      hasSidebar: pageHasSidebar = !!(currentRoute?.isPrivate && !currentRoute?.isPublic)
     } = currentRoute ?? {};
 
     /** Compute new value */
