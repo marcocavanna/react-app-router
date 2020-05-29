@@ -1,37 +1,8 @@
 import * as React from 'react';
 
-import { AppRouter, AppRoute, AppState, ExtraComponentProps } from 'MyComponent';
+import { AppState, ExtraComponentProps } from 'MyComponent';
 
-import Home from './routes/Home';
-import Articles from './routes/Articles';
-import ShowArticle from './routes/ShowArticle';
-import Profile from './routes/Profile';
-
-import InitialLoader from './components/InitialLoader';
-import Header from './components/Header';
-
-
-const routes: AppRoute[] = [
-  { name: 'Home', component: Home, path: '/', title: 'Home Page', isDefault: true, isPublic: true },
-  {
-    name     : 'Articles',
-    component: Articles,
-    path     : '/articles',
-    title    : 'All Articles',
-    isPublic : true,
-    isPrivate: true,
-    isDefault: 'private'
-  },
-  {
-    name     : 'ShowArticle',
-    component: ShowArticle,
-    path     : '/articles/:id',
-    title    : 'Read an Article',
-    isPublic : true,
-    isPrivate: true
-  },
-  { name: 'Profile', component: Profile, path: '/profile', title: 'Private Profile', isPrivate: true }
-];
+import { AppRouter } from './lib/routing';
 
 export default class App extends React.Component<any, AppState> {
 
@@ -70,20 +41,10 @@ export default class App extends React.Component<any, AppState> {
 
     return (
       <AppRouter
-        useRouteClassName
-        hasSidebar
-        hasNavbar
-        defaultAppName={'ReactApp Router'}
-        pageTitleSeparator={' • '}
-        pageTitleWhileInitiallyLoading={'Loading...'}
-        routes={routes}
         isInitiallyLoading={isInitiallyLoading}
         userHasAuth={userHasAuth}
         components={{
-          InitialLoader,
-          Header,
           Footer,
-          NotFound: () => <h1 style={{ color: 'red' }}>Page not Found!</h1>,
           Navbar  : () => <h5>You are {!userHasAuth && 'not'} logged in</h5>
         }}
       />

@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import { AppLink, usePageTitle } from 'MyComponent';
+import { usePageTitle } from 'MyComponent';
 
 import { useParams } from 'react-router-dom';
+
+import { AppLink } from '../lib/routing';
 
 
 export default () => {
@@ -18,7 +20,7 @@ export default () => {
       <h1>{params.id} Article Titles</h1>
       <h3>Articles Subtitles</h3>
       <hr />
-      <AppLink to={'Articles'}>
+      <AppLink to='Articles'>
         <h3>Return to Articles List</h3>
       </AppLink>
     </React.Fragment>
