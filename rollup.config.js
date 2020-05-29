@@ -1,14 +1,13 @@
-import { resolve, relative, extname } from 'path';
+import { resolve, relative, extname, basename } from 'path';
 
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
-import postcss from 'rollup-plugin-postcss';
 
-import pkg from '../package.json';
+import pkg from './package.json';
 
-
-const src = `${resolve(__dirname, '..', 'src')}/`;
+// Get the Default Source Folder
+const src = `${resolve(__dirname, 'src')}/`;
 
 /** Config Builder Helper */
 const buildConfig = ({
@@ -42,7 +41,7 @@ const buildConfig = ({
   input: 'src/index.ts',
 
   /** Keep externals from peerDependencies */
-  external: Object.keys(pkg.peerDependencies || {}),
+  external: Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.dependencies || {})),
 
   /** Append Plugins */
   plugins: [
@@ -66,13 +65,6 @@ const buildConfig = ({
     /** User Node Module Resolver */
     nodeResolve(),
 
-    /** Use PostCSS */
-    postcss({
-      config: {
-        path: './postcss.config.js'
-      }
-    }),
-
     /** Add the commonJS plugin */
     commonjs(),
 
@@ -81,7 +73,35 @@ const buildConfig = ({
   ],
 
   /** Set Options by Args */
-  preserveModules,
+  ...(!preserveModules ? {} : {
+    /**
+     * Instead using the original preserve modules
+     * function of Rollup, must use a custom function to
+     * preserve each components and files, and bundle each
+     * external node_modules file into a single helper file
+     */
+    manualChunks: (id) => {
+      /** Get filename and extension */
+      const ext = extname(id);
+      const filename = basename(id, ext);
+
+      /** If id come from node_modules, put into external helpers */
+      if (/node_modules/.test(id)) {
+        return `external-modules/${filename}`;
+      }
+
+      /** Get relative file path, stripping original extension */
+      const relativePath = relative(src, id).replace(ext, '');
+
+      /** If relative it's outside source folder, place into external helpers */
+      if (/\.\./.test(relativePath)) {
+        return `external-modules/${filename}`;
+      }
+
+      /** Else if is internal, return the relative path */
+      return relativePath;
+    }
+  }),
 
   cache,
 
@@ -107,30 +127,12 @@ export default [
         dir                   : 'dist/module',
         format                : 'esm',
         chunkFileNames        : '[name].js',
-        hoistTransitiveImports: false
+        hoistTransitiveImports: false,
+        minifyInternalExports : false
       }
     ],
-    /**
-     * Use a custom function to preserve components
-     * component paths and files, and bundle orr
-     * node components external function into a single files
-     */
-    manualChunks    : (id) => {
-      /** Put node components into helpers */
-      if (/node_modules/.test(id)) {
-        return 'external-helpers';
-      }
-      /** Get relative path, stripping extension */
-      const relativePath = relative(src, id).replace(extname(id), '');
-
-      /** If relative path is not a child, return external helpers to */
-      if (/\.\./.test(relativePath)) {
-        return 'external-helpers';
-      }
-
-      /** Return the relative module path */
-      return relativePath;
-    }
+    /** Preserve original module */
+    preserveModules: true
   }),
 
   /** Build Lib */
@@ -139,9 +141,8 @@ export default [
     output: [
       {
         file   : 'dist/lib/index.js',
-        format : 'cjs',
-        exports: 'auto'
+        format : 'cjs'
       }
     ]
-  })
+  }),
 ];
