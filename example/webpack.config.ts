@@ -20,7 +20,7 @@ export default {
 
   /** Define default module resolution */
   resolve: {
-    modules   : [ 'node_modules', resolve(__dirname) ],
+    modules   : [ 'node_modules', resolve(__dirname), resolve(__dirname, 'node_modules') ],
     extensions: [ '.ts', '.tsx', '.js', '.jsx', '.json', '.scss' ],
     alias     : {
       MyComponent: resolve(__dirname, '..', 'src')
@@ -134,7 +134,14 @@ export default {
             }
           },
 
-          'postcss-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: __dirname
+              }
+            }
+          },
 
           {
             loader : 'sass-loader',
