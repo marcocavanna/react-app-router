@@ -9,7 +9,7 @@ import type { AppRouterComponents } from '../components/AppRouter/AppRouter.inte
 
 export type RouteParams = { [key: string]: string | number | boolean | undefined };
 
-export type CurrentRoute = { route: Readonly<AppRoute>, params: RouteParams, search: URLSearchParams };
+export type CurrentRoute<K extends string = string> = { route: Readonly<AppRoute<K>>, params: RouteParams, search: URLSearchParams };
 
 export interface AppRouterLayout extends Pick<AppRouterComponents, 'Loader' | 'InitialLoader'> {
   /** Check if Current Route has navbar visible */
@@ -31,7 +31,30 @@ export interface AppRouterLayout extends Pick<AppRouterComponents, 'Loader' | 'I
   pageTitleWhileLoading?: string;
 }
 
-export interface AppRouterTools {
+export interface UseRoutingTools<K extends string = string> {
+  /** The default private route */
+  defaultPrivateRoute: Readonly<AppRoute<K>>;
+
+  /** The default public route */
+  defaultPublicRoute: Readonly<AppRoute<K>>;
+
+  /** Route to a Page using its name */
+  routeTo(route: K | AppRoute<K>, params?: RouteParams, state?: History.LocationState): void;
+
+  /** Check if with current auth, a user could reach a route */
+  couldRouteTo(route?: AppRoute<K>): boolean;
+
+  /** Get the Route object by name */
+  getRoute(pageName: K): Readonly<AppRoute<K>> | undefined;
+
+  /** Route to default Private Page */
+  routeToDefaultPrivate(params?: RouteParams, state?: History.LocationState): void;
+
+  /** Route to default Public Page */
+  routeToDefaultPublic(params?: RouteParams, state?: History.LocationState): void;
+}
+
+export interface AppRouterTools<K extends string = string> extends UseRoutingTools<K> {
   /** Get current App Name */
   appName?: string;
 
@@ -39,34 +62,13 @@ export interface AppRouterTools {
   appState: Readonly<AppState>;
 
   /** Get the current Route */
-  currentRoute: CurrentRoute;
-
-  /** The default private route */
-  defaultPrivateRoute: Readonly<AppRoute>;
-
-  /** The default public route */
-  defaultPublicRoute: Readonly<AppRoute>;
+  currentRoute: CurrentRoute<K>;
 
   /** Get current state of App Layout */
   layout: Readonly<AppRouterLayout>;
 
   /** Restore the Default App Name */
   restoreAppName: () => void;
-
-  /** Check if with current auth, a user could reach a route */
-  couldRouteTo(route?: AppRoute): boolean;
-
-  /** Get the Route object by name */
-  getRoute(pageName: string): Readonly<AppRoute> | undefined;
-
-  /** Route to a Page using its name */
-  routeTo(route: string | AppRoute, params?: RouteParams, state?: History.LocationState): void;
-
-  /** Route to default Private Page */
-  routeToDefaultPrivate(params?: RouteParams, state?: History.LocationState): void;
-
-  /** Route to default Public Page */
-  routeToDefaultPublic(params?: RouteParams, state?: History.LocationState): void;
 
   /** Set the new App Name */
   setAppName(nextAppName?: string | ((currentAppName: string) => string)): void;

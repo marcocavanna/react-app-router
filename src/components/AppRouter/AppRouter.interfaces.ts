@@ -28,7 +28,8 @@ export type AppRouterOuterProps = Omit<AppRouterProps, 'browserRouterProps'>;
 /**
  * Main AppRouter Component Props definition
  */
-export interface AppRouterProps extends Partial<AppState>, Omit<RouteWatcherProps, 'onRouteChange'> {
+export interface AppRouterProps<K extends string = string> extends Partial<AppState>,
+  Omit<RouteWatcherProps, 'onRouteChange'> {
 
   /** Pass any props to BrowserRouter component */
   browserRouterProps?: BrowserRouterProps;
@@ -74,10 +75,10 @@ export interface AppRouterProps extends Partial<AppState>, Omit<RouteWatcherProp
    * continue without any side effects.
    */
   getNextRoute?(
-    props: AppRoute,
+    props: AppRoute<K>,
     appState: AppState,
     routeProps: RouteComponentProps<any, any, any>
-  ): MandatoryRedirect;
+  ): MandatoryRedirect<K>;
 
   /**
    * Set if the AppRouter must show the navbar component
@@ -97,10 +98,10 @@ export interface AppRouterProps extends Partial<AppState>, Omit<RouteWatcherProp
    * will not be fired, even if hash has changed.
    * It will only be called internally to remove className if ´useRouteClassName´ is used.
    */
-  onRouteChange?(current: AppRoute, location: Location, history: History): void;
+  onRouteChange?(current: AppRoute<K>, location: Location, history: History): void;
 
   /** The AppRouter Pages Components */
-  routes: AppRoute[];
+  routes: AppRoute<K>[];
 
   /**
    * Set the Page Title to display while App is in Initially Loading State
@@ -132,7 +133,7 @@ export interface AppRouterProps extends Partial<AppState>, Omit<RouteWatcherProp
  * an object containing the RouteName and it's params.
  * Passing a nil value will prevent the redirect
  */
-export interface StrictMandatoryRedirect {
+export interface StrictMandatoryRedirect<K extends string = string> {
   route: string | AppRoute;
 
   params?: RouteParams;
@@ -140,9 +141,9 @@ export interface StrictMandatoryRedirect {
   state?: History.LocationState;
 }
 
-export type MandatoryRedirect =
+export type MandatoryRedirect<K extends string = string> =
   | string
-  | StrictMandatoryRedirect
+  | StrictMandatoryRedirect<K>
   | null
   | undefined;
 
@@ -153,6 +154,9 @@ export type MandatoryRedirect =
 export interface ExtraComponentProps {
   /** Current AppState */
   appState: AppState;
+
+  /** The App Current Route */
+  currentRoute: AppRoute;
 }
 
 export type SideRouteComponent<P extends {} = {}> = React.ComponentType<P & ExtraComponentProps>;
@@ -219,19 +223,19 @@ export interface AppRouterState {
   hasSidebar: boolean;
 }
 
-export interface AppRouterSplittedProps {
+export interface AppRouterSplittedProps<K extends string = string> {
   Components: AppRouterComponents;
 
   appState: AppState;
 
-  extraContentProps: { appState: AppState, [key: string]: any };
+  extraContentProps: { appState: AppState, currentRoute: AppRoute, [key: string]: any };
 
   innerClassNames: {
     pageClassNames: ClassValue | ClassValue[];
     viewClassNames: ClassValue | ClassValue[];
   };
 
-  routes: AppRoute[];
+  routes: AppRoute<K>[];
 
   routeWatcherProps: RouteWatcherProps;
 }

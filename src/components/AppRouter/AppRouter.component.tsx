@@ -398,6 +398,11 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
       ...rest
     } = this.props;
 
+    /** Get Current Route from State */
+    const {
+      currentRoute
+    } = this.state;
+
     /** Build the AppState Props */
     const appState: AppState = {
       isInitiallyLoading: !!isInitiallyLoading,
@@ -406,7 +411,11 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
     };
 
     /** Build Props to pass to extra content */
-    const extraContentProps = { appState, ...rest };
+    const extraContentProps = {
+      appState,
+      currentRoute,
+      ...rest
+    };
 
     /** Return Props */
     return {

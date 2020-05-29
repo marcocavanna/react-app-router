@@ -102,12 +102,13 @@ export default [
     /** Build d.ts files */
     tsconfigOverride: { target: 'ES2017' },
     /** Set the Output */
-    output          : [ {
-      dir                   : 'dist/module',
-      format                : 'esm',
-      chunkFileNames        : '[name].js',
-      hoistTransitiveImports: false
-    }
+    output          : [
+      {
+        dir                   : 'dist/module',
+        format                : 'esm',
+        chunkFileNames        : '[name].js',
+        hoistTransitiveImports: false
+      }
     ],
     /**
      * Use a custom function to preserve components
@@ -135,11 +136,12 @@ export default [
   /** Build Lib */
   buildConfig({
     /** Set the Output */
-    output: [ {
-      file   : 'dist/lib/index.js',
-      format : 'cjs',
-      exports: 'auto'
-    }
+    output: [
+      {
+        file   : 'dist/lib/index.js',
+        format : 'cjs',
+        exports: 'auto'
+      }
     ]
   })
 ];

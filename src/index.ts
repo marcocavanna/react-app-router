@@ -64,7 +64,15 @@ export type { default as AppState } from './interfaces/AppState';
 
 
 /* --------
- * AppRouter Internal Props
+ * Builder
+ * -------- */
+export { default as buildRoutingSystem } from './helpers/buildAppRouter';
+
+export type { AppRoutingSystem } from './helpers/buildAppRouter';
+
+
+/* --------
+ * AppRouter Internal Comp
  * -------- */
 export { default as AppLink } from './components/AppLink/AppLink.component';
 

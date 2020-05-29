@@ -3,7 +3,7 @@ import type { NavLinkProps } from 'react-router-dom';
 import type { RouteParams } from '../../context/app.router.context.interfaces';
 
 
-export interface AppLinkProps<T extends string = string> extends Omit<NavLinkProps
+export interface AppLinkProps<K extends string = string> extends Omit<NavLinkProps
   , 'to'> {
   /** Render the link as NavLink */
   asNavLink?: boolean;
@@ -24,5 +24,5 @@ export interface AppLinkProps<T extends string = string> extends Omit<NavLinkPro
   renderAnyway?: boolean;
 
   /** Route name. Must be one of the defined route of AppRouter component */
-  to: T;
+  to: K;
 }

@@ -6,7 +6,7 @@ import { useAppRouter } from '../context/app.router.context';
 import type {
   AppRouterTools,
   AppRouterLayout,
-  CurrentRoute
+  CurrentRoute, UseRoutingTools,
 } from '../context/app.router.context.interfaces';
 
 import type AppState from '../interfaces/AppState';
@@ -24,8 +24,6 @@ export type UseAppNameTools = readonly [
   (() => void)
 ];
 
-export type UseRoutingTools = Pick<AppRouterTools, 'defaultPrivateRoute' | 'defaultPublicRoute' | 'couldRouteTo' | 'getRoute' | 'routeTo' | 'routeToDefaultPrivate' | 'routeToDefaultPublic'>;
-
 export type UsePageTitleTools = readonly [
   /** Current page title */
   string,
@@ -38,7 +36,7 @@ export type UsePageTitleTools = readonly [
  * Hook Functions
  * -------- */
 
-function getAppRouterTools(hook: string): AppRouterTools {
+function getAppRouterTools<K extends string = string>(hook: string): AppRouterTools<K> {
   if (process.env.NODE_ENV === 'development') {
     invariant(
       typeof React.useContext === 'function',
@@ -46,7 +44,7 @@ function getAppRouterTools(hook: string): AppRouterTools {
     );
   }
 
-  return useAppRouter();
+  return useAppRouter() as AppRouterTools<K>;
 }
 
 
@@ -71,12 +69,12 @@ export function useAppName(): UseAppNameTools {
 }
 
 
-export function useCurrentRoute(): Readonly<CurrentRoute> {
-  return getAppRouterTools('useCurrentRoute').currentRoute;
+export function useCurrentRoute<K extends string = string>(): Readonly<CurrentRoute<K>> {
+  return getAppRouterTools<K>('useCurrentRoute').currentRoute;
 }
 
 
-export function useRouting(): UseRoutingTools {
+export function useRouting<K extends string = string>(): UseRoutingTools<K> {
   const {
     routeTo,
     couldRouteTo,
@@ -85,7 +83,7 @@ export function useRouting(): UseRoutingTools {
     routeToDefaultPublic,
     defaultPrivateRoute,
     defaultPublicRoute
-  } = getAppRouterTools('useRouting');
+  } = getAppRouterTools<K>('useRouting');
 
   return {
     routeTo,

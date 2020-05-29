@@ -6,17 +6,17 @@ import { AppRouterConsumer } from '../context/app.router.context';
 import type { AppRouterTools } from '../context/app.router.context.interfaces';
 
 
-export interface WithAppRouterProps {
-  appRouter: AppRouterTools;
+export interface WithAppRouterProps<K extends string = string> {
+  appRouter: AppRouterTools<K>;
 }
 
 
-export type ComponentWithAppRouterProps<P extends {} = {}> = React.ComponentType<P & WithAppRouterProps>;
+export type ComponentWithAppRouterProps<P extends {} = {}, K extends string = string> = React.ComponentType<P & WithAppRouterProps<K>>;
 
 
-const withAppRouter = <P extends {}>(
+const withAppRouter = <P extends {} = {}, K extends string = string>(
   ChildComponent: React.ComponentType<P>
-): ComponentWithAppRouterProps<P> => (childComponentProps: P) => (
+): ComponentWithAppRouterProps<P, K> => (childComponentProps: P) => (
   <AppRouterConsumer>
     {appRouterTools => {
       /** Assert Consumer is Valid */
