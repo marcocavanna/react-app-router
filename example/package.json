@@ -1,0 +1,46 @@
+{
+  "name": "@appbuckets/app-router-examples",
+  "version": "0.3.0-beta.1",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "An AppState and AppRoute wrapper of react-router-dom with AuthState",
+  "author": {
+    "name": "Marco Cavanna",
+    "email": "marco@appbuckets.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcocavanna/react-app-router.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marcocavanna/react-app-router/issues"
+  },
+  "homepage": "https://github.com/marcocavanna/react-app-router#readme",
+  "scripts": {
+    "start": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" NODE_ENV=development WEBPACK_LIVE_SERVER=1 webpack-dev-server --progress"
+  },
+  "devDependencies": {
+    "@types/circular-dependency-plugin": "^5.0.1",
+    "@types/html-webpack-plugin": "^3.2.3",
+    "@types/mini-css-extract-plugin": "^0.9.1",
+    "@types/webpack-dev-server": "^3.11.0",
+    "autoprefixer": "^9.8.0",
+    "circular-dependency-plugin": "^5.2.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^3.5.3",
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.14.1",
+    "postcss-import": "^12.0.1",
+    "postcss-import-url": "^5.1.0",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^8.0.2",
+    "source-map-loader": "^1.0.0",
+    "ts-loader": "^7.0.5",
+    "tsconfig-paths": "^3.9.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
