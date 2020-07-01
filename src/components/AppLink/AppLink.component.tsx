@@ -33,7 +33,7 @@ function AppLink<T extends string = string>(props: AppLinkProps<T>) {
     );
 
     /** Build the path using params */
-    const pathname = params ? generatePath(route.path, params) : route.path;
+    const pathname = generatePath(route.path, params);
 
     /** Set the route */
     setNextRoute({ route, pathname });
