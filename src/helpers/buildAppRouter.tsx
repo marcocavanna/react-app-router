@@ -67,7 +67,7 @@ function buildAppRoutingSystem<K extends string>(
 
   Object.keys(routesRecord).forEach((name) => {
     routes.push({
-      ...routesRecord[name as K],
+      ...routesRecord[name as K] as AppRoute,
       name
     });
   });

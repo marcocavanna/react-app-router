@@ -80,4 +80,6 @@ export default interface AppRoute<T extends string = string, P extends {} = {}> 
    */
   title?: string;
 
+  /** Any other Key */
+  [other: string]: any;
 }

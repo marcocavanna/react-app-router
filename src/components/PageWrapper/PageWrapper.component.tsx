@@ -86,9 +86,9 @@ function PageWrapper(wrapperProps: PageWrapperProps): React.ReactElement<RoutePr
       const userDefinedMandatoryRedirect = getNextRoute({
         isPrivate,
         isPublic,
+        ...restRouteProps as AppRoute,
         path     : path ?? '',
-        component: Component,
-        ...restRouteProps
+        component: Component
       }, appState, routeProps);
 
       if (userDefinedMandatoryRedirect) {

@@ -1,6 +1,6 @@
 {
   "name": "@appbuckets/app-router",
-  "version": "0.3.0-beta.1",
+  "version": "0.3.0-beta.2",
   "description": "An AppState and AppRoute wrapper of react-router-dom with AuthState",
   "keywords": [
     "react",
@@ -8,6 +8,10 @@
     "routing",
     "auth"
   ],
+  "publishConfig": {
+    "tag": "next",
+    "access": "public"
+  },
   "main": "dist/lib/index.js",
   "module": "dist/module/index.js",
   "types": "dist/types/index.d.ts",
@@ -40,9 +44,9 @@
     "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts'"
   },
   "peerDependencies": {
-    "react": "~16.13.1",
-    "react-dom": "~16.13.1",
-    "react-router-dom": "~5.2.0"
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-router-dom": "5.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "11.0.2",
