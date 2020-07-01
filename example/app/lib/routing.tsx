@@ -41,7 +41,7 @@ const {
 
   Profile: {
     component: Profile,
-    path: '/profile',
+    path: '/profile/:optional?/:params?',
     title: 'Private Profile',
     isPrivate: true
   }

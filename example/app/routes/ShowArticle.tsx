@@ -1,10 +1,8 @@
 import * as React from 'react';
 
-import { usePageTitle } from 'MyComponent';
+import { usePageTitle, AppLink } from 'MyComponent';
 
 import { useParams } from 'react-router-dom';
-
-import { AppLink } from '../lib/routing';
 
 
 export default () => {

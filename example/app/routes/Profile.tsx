@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { AppLink } from '../lib/routing';
+import { AppLink } from 'MyComponent';
 
 
 export default () => (

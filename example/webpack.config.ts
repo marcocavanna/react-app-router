@@ -23,7 +23,9 @@ export default {
     modules   : [ 'node_modules', resolve(__dirname), resolve(__dirname, 'node_modules') ],
     extensions: [ '.ts', '.tsx', '.js', '.jsx', '.json', '.scss' ],
     alias     : {
-      MyComponent: resolve(__dirname, '..', 'src')
+      MyComponent: resolve(__dirname, '..', 'src'),
+      react: resolve(__dirname, 'node_modules', 'react'),
+      'react-dom': resolve(__dirname, 'node_modules', 'react-dom')
     }
   },
 
