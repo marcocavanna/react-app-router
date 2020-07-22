@@ -75,6 +75,25 @@ function PageWrapper(wrapperProps: PageWrapperProps): React.ReactElement<RoutePr
   /** Render Route */
   const renderRoute = (routeProps: RouteComponentProps<any>) => {
     /**
+     * While App is Initially Loading, any mandatory redirect could not be performed.
+     * In this case must render the Initial Loader if exists, or null.
+     * This effect will be valid until hidePageWhileInitiallyLoading is equal to true
+     */
+    if (isInitiallyLoading) {
+      /** Set page Title if Exists */
+      if (typeof pageTitleWhileInitiallyLoading === 'string') {
+        setPageTitle(pageTitleWhileInitiallyLoading);
+      }
+
+      /** If must Hide Page, do it */
+      if (hidePageWhileInitiallyLoading) {
+        return (
+          InitialLoader && <InitialLoader {...extraContentProps} />
+        );
+      }
+    }
+
+    /**
      * Before render the page component
      * or any loader components check if user
      * could reach this route
@@ -180,10 +199,7 @@ function PageWrapper(wrapperProps: PageWrapperProps): React.ReactElement<RoutePr
     }
 
     /** Set the Page Title */
-    if (isInitiallyLoading && pageTitleWhileInitiallyLoading) {
-      setPageTitle(pageTitleWhileInitiallyLoading);
-    }
-    else if (isLoading && pageTitleWhileLoading) {
+    if (isLoading && pageTitleWhileLoading) {
       setPageTitle(pageTitleWhileLoading);
     }
     else {
@@ -191,12 +207,6 @@ function PageWrapper(wrapperProps: PageWrapperProps): React.ReactElement<RoutePr
     }
 
     /** Render loaders if they are hiding page */
-    if (isInitiallyLoading && hidePageWhileInitiallyLoading) {
-      return (
-        InitialLoader && <InitialLoader {...extraContentProps} />
-      );
-    }
-
     if (isLoading && hidePageWhileLoading) {
       return (
         Loader && <Loader {...extraContentProps} />
