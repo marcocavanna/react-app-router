@@ -32,6 +32,9 @@ export interface AppRouterLayout extends Pick<AppRouterComponents, 'Loader' | 'I
 }
 
 export interface UseRoutingTools<K extends string = string> {
+  /** All App Routes */
+  allRoutes: ReadonlyArray<AppRoute<K>>;
+
   /** The default private route */
   defaultPrivateRoute: Readonly<AppRoute<K>>;
 

@@ -76,6 +76,7 @@ export function useCurrentRoute<K extends string = string>(): Readonly<CurrentRo
 
 export function useRouting<K extends string = string>(): UseRoutingTools<K> {
   const {
+    allRoutes,
     routeTo,
     couldRouteTo,
     getRoute,
@@ -86,6 +87,7 @@ export function useRouting<K extends string = string>(): UseRoutingTools<K> {
   } = getAppRouterTools<K>('useRouting');
 
   return {
+    allRoutes,
     routeTo,
     couldRouteTo,
     getRoute,
