@@ -25,4 +25,7 @@ export interface AppLinkProps<K extends string = string> extends Omit<NavLinkPro
 
   /** Route name. Must be one of the defined route of AppRouter component */
   to: K;
+
+  /** Any Other Props */
+  [other: string]: any;
 }
