@@ -289,7 +289,6 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
 
     /** Get Location Params */
     const {
-      match,
       location,
       routes,
       hidePageWhileInitiallyLoading,
@@ -301,6 +300,9 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
     /** Get default Route */
     const defaultPrivateRoute = AppRouterWrapped.getDefaultPrivateRoute(routes);
     const defaultPublicRoute = AppRouterWrapped.getDefaultPublicRoute(routes);
+
+    /** Get Path Matcher */
+    const pathMatcher = matchPath(location.pathname, { path: currentRoute.path });
 
     return {
 
@@ -315,9 +317,11 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
 
       // Current Rendered Route and Routing func
       currentRoute         : {
-        route : currentRoute,
-        params: match.params,
-        search: new URLSearchParams(location.search)
+        isExact: !!(pathMatcher?.isExact),
+        params : pathMatcher?.params ?? {},
+        route  : currentRoute,
+        search : new URLSearchParams(location.search),
+        url    : pathMatcher?.url ?? location.pathname
       },
       getRoute             : this.handleGetRouteByName,
       routeTo              : this.handleRouteTo,

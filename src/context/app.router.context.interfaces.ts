@@ -9,7 +9,18 @@ import type { AppRouterComponents } from '../components/AppRouter/AppRouter.inte
 
 export type RouteParams = { [key: string]: string | number | boolean | undefined };
 
-export type CurrentRoute<K extends string = string> = { route: Readonly<AppRoute<K>>, params: RouteParams, search: URLSearchParams };
+export type CurrentRoute<K extends string = string> = {
+  /** The Current Route Object */
+  route: Readonly<AppRoute<K>>,
+  /** Route Params */
+  params: RouteParams,
+  /** Check if Path match exactly */
+  isExact: boolean,
+  /** Search Params */
+  search: URLSearchParams,
+  /** Current URL */
+  url: string
+};
 
 export interface AppRouterLayout extends Pick<AppRouterComponents, 'Loader' | 'InitialLoader'> {
   /** Check if Current Route has navbar visible */

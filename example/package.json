@@ -1,6 +1,6 @@
 {
   "name": "@appbuckets/app-router-examples",
-  "version": "0.3.1-beta.3",
+  "version": "0.3.2",
   "private": true,
   "main": "index.js",
   "license": "MIT",
