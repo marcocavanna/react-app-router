@@ -43,7 +43,8 @@ const {
     component: Profile,
     path: '/profile/:optional?/:params?',
     title: 'Private Profile',
-    isPrivate: true
+    isPrivate: true,
+    isPublic: false
   }
 
 }, {

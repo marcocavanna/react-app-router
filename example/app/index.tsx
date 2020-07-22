@@ -9,13 +9,13 @@ export default class App extends React.Component<any, AppState> {
   state = {
     isLoading         : false,
     isInitiallyLoading: true,
-    userHasAuth       : true
+    userHasAuth       : false
   };
 
 
   componentDidMount() {
     setTimeout(() => {
-      this.setState({ isInitiallyLoading: false });
+      this.setState({ isInitiallyLoading: false, userHasAuth: true });
     }, 1000);
   }
 
