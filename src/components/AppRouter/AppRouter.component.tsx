@@ -261,14 +261,8 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
       return;
     }
 
-    /** If no params are passed, go to next path */
-    if (typeof params !== 'object') {
-      history.push(nextPath, state);
-    }
-    /** Else compile path with params */
-    else {
-      history.push(generatePath(nextPath, params), state);
-    }
+    /** Push the new Route */
+    history.push(generatePath(nextPath, params), state);
   };
 
 
@@ -309,6 +303,9 @@ class AppRouterWrapped extends React.Component<AppRouterInnerProps, AppRouterSta
     const defaultPublicRoute = AppRouterWrapped.getDefaultPublicRoute(routes);
 
     return {
+
+      // All Routes
+      allRoutes: routes,
 
       // Current AppName
       appName,
