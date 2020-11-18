@@ -1,6 +1,6 @@
 {
   "name": "@appbuckets/app-router",
-  "version": "0.3.2",
+  "version": "0.3.21",
   "description": "An AppState and AppRoute wrapper of react-router-dom with AuthState",
   "keywords": [
     "react",
