@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Source Files" pattern="!file:dist//*&amp;&amp;!file:example//*&amp;&amp;!file:.idea//*&amp;&amp;!file:*.lock&amp;&amp;!file:node_modules//*" />
+</component>

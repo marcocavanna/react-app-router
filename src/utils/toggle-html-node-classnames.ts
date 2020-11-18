@@ -1,14 +1,12 @@
 export type ClassNameToggler = { [key: string]: boolean };
 
 export default function toggleHTMLNodeClassNames(element: HTMLElement, classNames: ClassNameToggler) {
-  const classToAdd: string[] = [];
-  const classToRemove: string[] = [];
-
-  Object.keys(classNames).forEach((className) => {
-    const arr = classNames[className] ? classToAdd : classToRemove;
-    arr.push(className);
+  Object.keys(classNames).forEach((key) => {
+    if (classNames[key]) {
+      element.classList.add(key);
+    }
+    else {
+      element.classList.remove(key);
+    }
   });
-
-  element.classList.remove(...classToRemove);
-  element.classList.add(...classToAdd);
 }
