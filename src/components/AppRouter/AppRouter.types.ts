@@ -1,6 +1,6 @@
 import { History, Location } from 'history';
 
-import { BrowserRouterProps, RouteComponentProps } from 'react-router-dom';
+import { BrowserRouterProps } from 'react-router-dom';
 import { ClassValue } from 'clsx';
 
 import { BaseRoutesDefinition } from '../../interfaces/RoutesDefinition';
@@ -140,5 +140,4 @@ export type IsValidRouteChecker<RoutesDefinition extends BaseRoutesDefinition,
   (
     route: AppRoute<RoutesDefinition, Name>,
     state: AppState,
-    props: RouteComponentProps,
   ) => MandatoryRedirect<RoutesDefinition>;

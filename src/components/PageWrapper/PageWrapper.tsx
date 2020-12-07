@@ -1,7 +1,11 @@
 import * as React from 'react';
 import invariant from 'tiny-invariant';
 
-import { RouteComponentProps, generatePath, Redirect, Route } from 'react-router-dom';
+import {
+  RouteChildrenProps,
+  generatePath,
+  Redirect
+} from 'react-router-dom';
 
 import {
   useAppRouter,
@@ -14,7 +18,7 @@ import { toggleHTMLNodeClassNames } from '../../utils';
 /* --------
  * Component Declare
  * -------- */
-type PageWrapperComponent = React.FunctionComponent<{
+type PageWrapperComponent = React.FunctionComponent<RouteChildrenProps & {
   route: AppRoute<any>
 }>;
 
@@ -25,8 +29,12 @@ type PageWrapperComponent = React.FunctionComponent<{
 const PageWrapper: PageWrapperComponent = (props) => {
 
   const {
+    history,
+    match,
+    location,
     route,
   } = props;
+
 
   // ----
   // Hooks and Variables Init
@@ -94,200 +102,155 @@ const PageWrapper: PageWrapperComponent = (props) => {
   );
 
 
-  // ----
-  // Route Renderer
-  // ----
-  const renderRoute = React.useCallback(
-    (routeProps: RouteComponentProps<any>) => {
-      /**
-       * While App is Initially Loading, any mandatory redirect could not be performed.
-       * In this case must render the Initial Loader if exists, or null.
-       * This effect will be valid until hidePageWhileInitiallyLoading is equal to true
-       */
-      if (state.isInitiallyLoading) {
-        /** Set page Title if Exists */
-        if (typeof layout.pageTitleWhileInitiallyLoading === 'string') {
-          setPageTitle(layout.pageTitleWhileInitiallyLoading);
-        }
+  /**
+   * While App is Initially Loading, any mandatory redirect could not be performed.
+   * In this case must render the Initial Loader if exists, or null.
+   * This effect will be valid until hidePageWhileInitiallyLoading is equal to true
+   */
+  if (state.isInitiallyLoading) {
+    /** Set page Title if Exists */
+    if (layout.pageTitleWhileInitiallyLoading) {
+      setPageTitle(layout.pageTitleWhileInitiallyLoading);
+    }
 
-        /** If must Hide Page, do it */
-        if (layout.hidePageWhileInitiallyLoading) {
-          return initialLoaderElement;
-        }
-      }
+    /** If must Hide Page, do it */
+    if (layout.hidePageWhileInitiallyLoading) {
+      return initialLoaderElement;
+    }
+  }
 
-      /**
-       * Before render the page component
-       * or any loader components check if user
-       * could reach this route
-       */
-      let mandatoryRedirect: StrictMandatoryRedirect<any> | null = null;
+  /**
+   * Before render the page component
+   * or any loader components check if user
+   * could reach this route
+   */
+  let mandatoryRedirect: StrictMandatoryRedirect<any> | null = null;
 
-      /** Call the getNextRoute function first if exists */
-      if (typeof isValidRoute === 'function') {
-        const userDefinedMandatoryRedirect = isValidRoute(
-          route as any,
-          state,
-          routeProps,
-        );
+  /** Call the getNextRoute function first if exists */
+  if (typeof isValidRoute === 'function') {
+    const userDefinedMandatoryRedirect = isValidRoute(
+      route as any,
+      state
+    );
 
-        if (userDefinedMandatoryRedirect) {
-          if (typeof (userDefinedMandatoryRedirect as string) === 'string') {
-            mandatoryRedirect = {
-              route : userDefinedMandatoryRedirect as string,
-              params: {},
-              state : {
-                redirectedBy: 'user',
-              },
-            };
-          }
-          else {
-            mandatoryRedirect = {
-              ...(userDefinedMandatoryRedirect as StrictMandatoryRedirect<any>),
-              state: {
-                ...(userDefinedMandatoryRedirect as StrictMandatoryRedirect<any>).state,
-                redirectedBy: 'user',
-              },
-            };
-          }
-        }
-      }
-
-      /** If custom assertion doesn't exists, check the auth state and page visibility */
-      if (!mandatoryRedirect) {
-        let systemDefinedMandatoryRedirect: string | AppRoute<any> | null = null;
-
-        /**
-         * If the page is only public and not hybrid,
-         * and the current user has got auth,
-         * force redirect to the default Private Page
-         */
-        if (isPublic && !isHybrid && state.userHasAuth) {
-          systemDefinedMandatoryRedirect = defaultPrivateRoute;
-        }
-
-        /**
-         * Else, check if the page is only private and not hybrid
-         * and if the current user hasn't got auth force redirect
-         * to the default Public Page
-         */
-        if (isPrivate && !isHybrid && !state.userHasAuth) {
-          systemDefinedMandatoryRedirect = defaultPublicRoute;
-        }
-
-        if (systemDefinedMandatoryRedirect) {
-          mandatoryRedirect = {
-            route : systemDefinedMandatoryRedirect,
-            params: {},
-            state : {
-              redirectedBy: 'system',
-            },
-          };
-        }
-      }
-
-      /**
-       * If a mandatory redirect exists, check user
-       * is not on the same page to avoid redirect loop
-       */
-      if (mandatoryRedirect) {
-        const routePath = typeof mandatoryRedirect.route === 'string'
-          ? getRouteByName(mandatoryRedirect.route)?.path
-          : mandatoryRedirect.route.path;
-
-        invariant(
-          typeof routePath === 'string',
-          `Route path has not been found for '${typeof mandatoryRedirect.route === 'string'
-            ? mandatoryRedirect.route
-            : mandatoryRedirect.route.name}'`,
-        );
-
-        const nextPath = generatePath(routePath, mandatoryRedirect.params);
-
-        if (nextPath !== routeProps.location.pathname) {
-          return (
-            <Redirect
-              to={{
-                pathname: nextPath,
-                state   : {
-                  ...mandatoryRedirect.state,
-                  redirectedFrom: routeProps.location.pathname,
-                },
-              }}
-            />
-          );
-        }
-      }
-
-      /** Set the Page Title */
-      if (state.isLoading && layout.pageTitleWhileLoading) {
-        setPageTitle(layout.pageTitleWhileLoading);
+    if (userDefinedMandatoryRedirect) {
+      if (typeof (userDefinedMandatoryRedirect as string) === 'string') {
+        mandatoryRedirect = {
+          route : userDefinedMandatoryRedirect as string,
+          params: {},
+          state : {
+            redirectedBy: 'user',
+          },
+        };
       }
       else {
-        setPageTitle(route.title);
+        mandatoryRedirect = {
+          ...(userDefinedMandatoryRedirect as StrictMandatoryRedirect<any>),
+          state: {
+            redirectedBy: 'user',
+          },
+        };
       }
+    }
+  }
 
-      /** Render loaders if they are hiding page */
-      if (state.isLoading && layout.hidePageWhileLoading) {
-        return loaderElement;
-      }
+  /** If custom assertion doesn't exists, check the auth state and page visibility */
+  if (!mandatoryRedirect) {
+    let systemDefinedMandatoryRedirect: string | AppRoute<any> | null = null;
 
-      /** Set the HTML ClassNames on Root Element */
-      if (useRouteClassName) {
-        toggleHTMLNodeClassNames(layout.appendRouteClassNameTo!, {
-          'has-auth'    : state.userHasAuth,
-          'with-sidebar': layout.hasSidebar,
-          'with-navbar' : layout.hasNavbar,
-        });
-      }
+    /**
+     * If the page is only public and not hybrid,
+     * and the current user has got auth,
+     * force redirect to the default Private Page
+     */
+    if (isPublic && !isHybrid && state.userHasAuth) {
+      systemDefinedMandatoryRedirect = defaultPrivateRoute;
+    }
 
-      /** Return the wrapped page */
-      return (
-        <React.Fragment>
-          {initialLoaderElement}
-          {loaderElement}
-          <Component
-            {...routeProps}
-          />
-        </React.Fragment>
-      );
-    },
-    [
-      Component,
-      route,
-      defaultPrivateRoute,
-      defaultPublicRoute,
-      getRouteByName,
-      initialLoaderElement,
-      isHybrid,
-      isPrivate,
-      isPublic,
-      isValidRoute,
-      layout.appendRouteClassNameTo,
-      layout.hasNavbar,
-      layout.hasSidebar,
-      layout.hidePageWhileInitiallyLoading,
-      layout.hidePageWhileLoading,
-      layout.pageTitleWhileInitiallyLoading,
-      layout.pageTitleWhileLoading,
-      loaderElement,
-      setPageTitle,
-      state, useRouteClassName,
-    ],
-  );
+    /**
+     * Else, check if the page is only private and not hybrid
+     * and if the current user hasn't got auth force redirect
+     * to the default Public Page
+     */
+    if (isPrivate && !isHybrid && !state.userHasAuth) {
+      systemDefinedMandatoryRedirect = defaultPublicRoute;
+    }
 
+    if (systemDefinedMandatoryRedirect) {
+      mandatoryRedirect = {
+        route : systemDefinedMandatoryRedirect,
+        params: {},
+        state : {
+          redirectedBy: 'system',
+        },
+      };
+    }
+  }
 
-  // ----
-  // Return the Route
-  // ----
+  /**
+   * If a mandatory redirect exists, check user
+   * is not on the same page to avoid redirect loop
+   */
+  if (mandatoryRedirect) {
+    const routePath = typeof mandatoryRedirect.route === 'string'
+      ? getRouteByName(mandatoryRedirect.route)?.path
+      : mandatoryRedirect.route.path;
+
+    invariant(
+      typeof routePath === 'string',
+      `Route path has not been found for '${typeof mandatoryRedirect.route === 'string'
+        ? mandatoryRedirect.route
+        : mandatoryRedirect.route.name}'`,
+    );
+
+    const nextPath = generatePath(routePath, mandatoryRedirect.params);
+
+    return (
+      <Redirect
+        to={{
+          pathname: nextPath,
+          state   : {
+            ...(mandatoryRedirect.state as object),
+            redirectedFrom: location.pathname,
+          }
+        }}
+      />
+    );
+  }
+
+  /** Set the Page Title */
+  if (state.isLoading && layout.pageTitleWhileLoading) {
+    setPageTitle(layout.pageTitleWhileLoading);
+  }
+  else {
+    setPageTitle(route.title);
+  }
+
+  /** Render loaders if they are hiding page */
+  if (state.isLoading && layout.hidePageWhileLoading) {
+    return loaderElement;
+  }
+
+  /** Set the HTML ClassNames on Root Element */
+  if (useRouteClassName) {
+    toggleHTMLNodeClassNames(layout.appendRouteClassNameTo!, {
+      'has-auth'    : state.userHasAuth,
+      'with-sidebar': layout.hasSidebar,
+      'with-navbar' : layout.hasNavbar,
+    });
+  }
+
+  /** Return the wrapped page */
   return (
-    <Route
-      path={route.path}
-      exact={route.exact}
-      sensitive={route.sensitive}
-      strict={route.strict}
-      render={renderRoute}
-    />
+    <React.Fragment>
+      {initialLoaderElement}
+      {loaderElement}
+      <Component
+        history={history}
+        location={location}
+        match={match}
+      />
+    </React.Fragment>
   );
 };
 

@@ -3,11 +3,11 @@ import clsx from 'clsx';
 
 import {
   BrowserRouter, generatePath,
-  matchPath,
+  matchPath, Route,
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch,
+  useRouteMatch
 } from 'react-router-dom';
 
 import { History } from 'history';
@@ -448,24 +448,39 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
           <Switch>
             {/* Build each single route */}
             {routes.map((route) => (
-              <PageWrapper
+              <Route
                 key={route.name as string}
-                route={route}
-              />
+                path={route.path}
+                exact={route.exact}
+                sensitive={route.sensitive}
+                strict={route.strict}
+              >
+                {(routeProps) => (
+                  <PageWrapper
+                    {...routeProps}
+                    route={route}
+                  />
+                )}
+              </Route>
             ))}
 
             {/* Build the Not Found route */}
             {Components?.NotFound && (
-              <PageWrapper
-                route={{
-                  name     : '__not_found_internal_component__',
-                  path     : '/',
-                  exact    : false,
-                  component: Components.NotFound,
-                  isPublic : true,
-                  isPrivate: true,
-                }}
-              />
+              <Route>
+                {(routeProps) => (
+                  <PageWrapper
+                    {...routeProps}
+                    route={{
+                      name     : '__not_found_internal_component__',
+                      path     : '/',
+                      exact    : false,
+                      component: Components.NotFound!,
+                      isPublic : true,
+                      isPrivate: true,
+                    }}
+                  />
+                )}
+              </Route>
             )}
           </Switch>
         </div>

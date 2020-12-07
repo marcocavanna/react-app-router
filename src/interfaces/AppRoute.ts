@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteChildrenProps } from 'react-router-dom';
 
 import { BaseRoutesDefinition } from './RoutesDefinition';
 
@@ -9,7 +9,7 @@ export interface AppRoute<RoutesDefinition extends BaseRoutesDefinition,
   Name extends keyof RoutesDefinition = keyof RoutesDefinition> {
 
   /** The page component to render */
-  component: React.ComponentType<RouteComponentProps>;
+  component: React.ComponentType<RouteChildrenProps>;
 
   /**
    * Set if this route must be reached
