@@ -1,109 +1,49 @@
 import * as React from 'react';
 import invariant from 'tiny-invariant';
 
-import { useAppRouter } from '../context/app.router.context';
+import { useAppRouter, AppRouterContext, CurrentRoute } from '../components/AppRouter';
 
-import type {
-  AppRouterTools,
-  AppRouterLayout,
-  CurrentRoute, UseRoutingTools,
-} from '../context/app.router.context.interfaces';
-
-import type AppState from '../interfaces/AppState';
-
-
-/* --------
- * Hooks Type & Interfaces
- * -------- */
-export type UseAppNameTools = readonly [
-  /** The current app name */
-  (string | undefined),
-  /** Set a new app name */
-  ((nextAppName?: (string | ((currentAppName: string) => string) | undefined)) => void),
-  /** Restore default app name */
-  (() => void)
-];
-
-export type UsePageTitleTools = readonly [
-  /** Current page title */
-  string,
-  /** Set a new page title, will be appended to current app title */
-  ((newTitle?: string) => void)
-];
+import { AppState, BaseRoutesDefinition } from '../interfaces';
 
 
 /* --------
  * Hook Functions
  * -------- */
 
-function getAppRouterTools<K extends string = string>(hook: string): AppRouterTools<K> {
+function useAppRouterTools<RoutesDefinition extends BaseRoutesDefinition,
+  CurrentRoute extends keyof RoutesDefinition = keyof RoutesDefinition>(
+  hook: string,
+): AppRouterContext<RoutesDefinition, CurrentRoute> {
+
   if (process.env.NODE_ENV === 'development') {
     invariant(
       typeof React.useContext === 'function',
-      `You must use React >= 16.8 in order to use '${hook}'()`
+      `You must use React >= 16.8 in order to use '${hook}'()`,
     );
   }
 
-  return useAppRouter() as AppRouterTools<K>;
+  return useAppRouter() as unknown as AppRouterContext<RoutesDefinition, CurrentRoute>;
 }
 
 
-export function useAppState(): Readonly<AppState> {
-  return getAppRouterTools('useAppState').appState;
+export function useAppRouterState<RoutesDefinition extends BaseRoutesDefinition>(): Readonly<AppState> {
+  return useAppRouterTools<RoutesDefinition>('useAppRouterState').state;
 }
 
 
-export function useLayout(): Readonly<AppRouterLayout> {
-  return getAppRouterTools('useLayoutState').layout;
+// eslint-disable-next-line
+export function useCurrentRoute<RoutesDefinition extends BaseRoutesDefinition, RouteName extends keyof RoutesDefinition>(): Readonly<CurrentRoute<RoutesDefinition, RouteName>> {
+  return useAppRouterTools<RoutesDefinition, RouteName>('useCurrentRoute').currentRoute;
 }
 
 
-export function useAppName(): UseAppNameTools {
-  const appRouterTools = getAppRouterTools('useAppName');
-
-  return [
-    appRouterTools.appName,
-    appRouterTools.setAppName,
-    appRouterTools.restoreAppName
-  ];
-}
-
-
-export function useCurrentRoute<K extends string = string>(): Readonly<CurrentRoute<K>> {
-  return getAppRouterTools<K>('useCurrentRoute').currentRoute;
-}
-
-
-export function useRouting<K extends string = string>(): UseRoutingTools<K> {
+export function usePageTitle(): readonly [ string, (newTitle?: string) => void ] {
   const {
-    allRoutes,
-    routeTo,
-    couldRouteTo,
-    getRoute,
-    routeToDefaultPrivate,
-    routeToDefaultPublic,
-    defaultPrivateRoute,
-    defaultPublicRoute
-  } = getAppRouterTools<K>('useRouting');
-
-  return {
-    allRoutes,
-    routeTo,
-    couldRouteTo,
-    getRoute,
-    routeToDefaultPrivate,
-    routeToDefaultPublic,
-    defaultPrivateRoute,
-    defaultPublicRoute
-  };
-}
-
-
-export function usePageTitle(): UsePageTitleTools {
-  const appRouterTools = getAppRouterTools('usePageTitle');
+    setPageTitle
+  } = useAppRouterTools('usePageTitle');
 
   return [
     document.title,
-    appRouterTools.setPageTitle
+    setPageTitle
   ] as const;
 }

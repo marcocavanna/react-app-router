@@ -1,6 +1,6 @@
 {
   "name": "@appbuckets/app-router",
-  "version": "0.3.21",
+  "version": "1.0.3",
   "description": "An AppState and AppRoute wrapper of react-router-dom with AuthState",
   "keywords": [
     "react",
@@ -33,19 +33,17 @@
   "homepage": "https://github.com/marcocavanna/react-app-router#readme",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "node scripts/syncExamplePkg.js && npm run build",
-    "prebuild": "rimraf dist && npm run lint",
+    "prepublishOnly": "npm run build",
+    "prebuild": "rimraf dist",
     "build": "rollup -c rollup.config.js",
     "build:prettier": "prettier --config .prettierrc --write \"dist/**/*{.js,.ts}\"",
     "build:declaration": "tsc -p tsconfig.declaration.json",
-    "postbuild": "npm run build:declaration && npm run build:prettier",
-    "start": "cd example && npm run start",
-    "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts'"
+    "postbuild": "npm run build:declaration && npm run build:prettier"
   },
   "peerDependencies": {
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-router-dom": "5.2.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "11.0.2",
@@ -55,14 +53,19 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "@types/recompose": "^0.30.7",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.10.4",
     "rollup-plugin-typescript2": "^0.27.1",
     "ts-node": "^8.10.1",
-    "tslint": "^6.1.2",
-    "tslint-react": "^5.0.0",
-    "tslint-react-hooks": "^2.2.2",
     "typescript": "^3.9.2"
   },
   "dependencies": {

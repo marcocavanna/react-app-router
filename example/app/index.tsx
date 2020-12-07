@@ -1,15 +1,16 @@
 import * as React from 'react';
 
-import { AppState, ExtraComponentProps } from 'MyComponent';
+import { AppState, SideComponentProps } from 'MyComponent';
 
 import { AppRouter } from './lib/routing';
+
 
 export default class App extends React.Component<any, AppState> {
 
   state = {
     isLoading         : false,
     isInitiallyLoading: true,
-    userHasAuth       : false
+    userHasAuth       : false,
   };
 
 
@@ -27,25 +28,27 @@ export default class App extends React.Component<any, AppState> {
 
   render() {
     const {
+      isLoading,
       isInitiallyLoading,
-      userHasAuth
+      userHasAuth,
     } = this.state;
 
-    const Footer = ({ appState }: ExtraComponentProps) => !appState.isInitiallyLoading
+    const Footer = ({ appState }: SideComponentProps) => (!appState.isInitiallyLoading
       ? (
         <div>
           <button onClick={this.toggleUserAuth}>{userHasAuth ? 'Disable Auth' : 'Enable Auth'}</button>
         </div>
       )
-      : null;
+      : null);
 
     return (
       <AppRouter
+        isLoading={isLoading}
         isInitiallyLoading={isInitiallyLoading}
         userHasAuth={userHasAuth}
-        components={{
+        Components={{
           Footer,
-          Navbar  : () => <h5>You are {!userHasAuth && 'not'} logged in</h5>
+          Navbar: () => <h5>You are {!userHasAuth && 'not'} logged in</h5>,
         }}
       />
     );

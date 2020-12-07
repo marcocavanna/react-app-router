@@ -1,11 +1,8 @@
-import type { RouteChildrenProps } from 'react-router-dom';
+import { History, Location } from 'history';
 
-import type { History, Location } from 'history';
-
-import type { WithAppRouterProps } from '../../hoc/withAppRouter';
-
-
-/** Exposed props by the Route Watcher Component */
+/* --------
+ * Main RouteWatcher Props
+ * -------- */
 export interface RouteWatcherProps {
   /**
    * Set manually the HTML Node where route classname are appended,
@@ -46,7 +43,4 @@ export interface RouteWatcherProps {
 
   /** Set the current route slug class on app mount node element */
   useRouteClassName?: boolean;
-}
-
-export interface RouteWatcherInternalProps extends RouteWatcherProps, RouteChildrenProps, WithAppRouterProps {
 }

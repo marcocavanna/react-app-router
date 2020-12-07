@@ -1,12 +1,15 @@
 import React from 'react';
 
-import type { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
+
+import { BaseRoutesDefinition } from './RoutesDefinition';
 
 
-export default interface AppRoute<T extends string = string, P extends {} = {}> {
+export interface AppRoute<RoutesDefinition extends BaseRoutesDefinition,
+  Name extends keyof RoutesDefinition = keyof RoutesDefinition> {
 
   /** The page component to render */
-  component: React.ComponentType<RouteComponentProps<P>>;
+  component: React.ComponentType<RouteComponentProps>;
 
   /**
    * Set if this route must be reached
@@ -14,6 +17,18 @@ export default interface AppRoute<T extends string = string, P extends {} = {}> 
    * Default is `true`
    */
   exact?: boolean;
+
+  /**
+   * Set if the AppRouter must show the footer component
+   * on page where footer has been enabled.
+   */
+  hasFooter?: boolean;
+
+  /**
+   * Set if the AppRouter must show the header component
+   * on page where header has been enabled.
+   */
+  hasHeader?: boolean;
 
   /**
    * Set if the page has navbar visible.
@@ -56,7 +71,7 @@ export default interface AppRoute<T extends string = string, P extends {} = {}> 
   isPublic?: boolean;
 
   /** Page unique name, used to refer to it */
-  name: T;
+  name: Name;
 
   /** The complete page path, including all params */
   path: string;

@@ -1,4 +1,4 @@
-export default interface AppState {
+export interface AppState {
   /**
    * Get or Set if App is initially loading.
    * This state will be set to true on AppRouter Bootstrap

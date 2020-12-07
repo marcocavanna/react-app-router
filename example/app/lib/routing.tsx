@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { buildRoutingSystem } from 'MyComponent';
+import { appRouterBuilder } from 'MyComponent';
 
 import Home from '../routes/Home';
 import Articles from '../routes/Articles';
@@ -10,64 +10,69 @@ import Profile from '../routes/Profile';
 import InitialLoader from '../components/InitialLoader';
 import Header from '../components/Header';
 
+
 const {
   AppRouter,
-  AppLink
-} = buildRoutingSystem({
+  AppLink,
+} = appRouterBuilder([
 
-  Home: {
+  {
+    name     : 'Home',
     component: Home,
-    path: '/',
-    isPublic: true,
-    isDefault: true
+    path     : '/',
+    isPublic : true,
+    isDefault: true,
   },
 
-  Articles: {
+  {
+    name     : 'Articles',
     component: Articles,
     path     : '/articles',
     title    : 'All Articles',
     isPublic : true,
     isPrivate: true,
-    isDefault: 'private'
+    isDefault: 'private',
   },
 
-  ShowArticle: {
+  {
+    name     : 'ShowArticle',
     component: ShowArticle,
     path     : '/articles/:id',
     title    : 'Read an Article',
     isPublic : true,
-    isPrivate: true
+    isPrivate: true,
   },
 
-  Profile: {
+  {
+    name     : 'Profile',
     component: Profile,
-    path: '/profile/:optional?/:params?',
-    title: 'Private Profile',
+    path     : '/profile/:optional?/:params?',
+    title    : 'Private Profile',
     isPrivate: true,
-    isPublic: false
-  }
+    isPublic : false,
+  },
 
-}, {
+], {
 
   defaultAppName: 'ReactApp Router',
 
-  hasNavbar: true,
+  hasNavbar : true,
   hasSidebar: true,
 
-  pageTitleSeparator: ' • ',
+  pageTitleSeparator            : ' • ',
   pageTitleWhileInitiallyLoading: 'Loading...',
 
-  components: {
+  Components: {
     Header,
     InitialLoader,
-    NotFound: () => <h1 style={{ color: 'red' }}>Page not Found!</h1>
+    NotFound: () => <h1 style={{ color: 'red' }}>Page not Found!</h1>,
   },
 
-  useRouteClassName: true
+  useRouteClassName: true,
 
 });
 
 export {
   AppRouter,
-  AppLink
+  AppLink,
 };

@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/marcocavanna/react-app-router#readme",
   "scripts": {
-    "start": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" NODE_ENV=development WEBPACK_LIVE_SERVER=1 webpack-dev-server --progress"
+    "start": "TS_NODE_PROJECT=\"tsconfig.webpack.json\" NODE_ENV=development WEBPACK_LIVE_SERVER=1 webpack-dev-server --progress"
   },
   "devDependencies": {
     "@types/circular-dependency-plugin": "^5.0.1",

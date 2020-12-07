@@ -7,9 +7,9 @@ export default () => (
     <h1>This is Articles Page</h1>
     <hr />
     <div>
-      <h4>Here's some Articles</h4>
+      <h4>Here's some Article</h4>
       {[ 1, 2, 3 ].map(id => (
-        <AppLink key={id} to={'ShowArticle'} params={{ id }}>
+        <AppLink key={id} to={'ShowArticle'} params={{ id: id.toString() }}>
           <h5>Go to Article number {id}</h5>
         </AppLink>
       ))}

@@ -1,79 +1,13 @@
-/* --------
- * Main App Router Module
- * -------- */
-export { default as AppRouter } from './components/AppRouter/AppRouter.component';
+export * from './components/AppLink';
 
-export type {
-  AppRouterProps,
-  StrictMandatoryRedirect,
-  MandatoryRedirect,
-  ExtraComponentProps,
-  AppRouterComponents
-} from './components/AppRouter/AppRouter.interfaces';
+export * from './components/AppRouter';
 
+export * from './components/PageWrapper';
 
-/* --------
- * Route Watcher Component
- * -------- */
-export { default as RouteWatcher } from './components/RouteWatcher/RouteWatcher.component';
+export * from './components/RouteWatcher';
 
-export type {
-  RouteWatcherProps
-} from './components/RouteWatcher/RouteWatcher.interfaces';
+export * from './helpers/appRouterBuilder';
 
-
-/* --------
- * App Router Context
- * -------- */
-export {
-  useAppRouter,
-  AppRouterConsumer
-} from './context/app.router.context';
-
-export type {
-  CurrentRoute,
-  RouteParams,
-  AppRouterLayout,
-  AppRouterTools
-} from './context/app.router.context.interfaces';
-
-
-/* --------
- * App Router HOC
- * -------- */
-export { default as withAppRouter } from './hoc/withAppRouter';
-
-export type {
-  ComponentWithAppRouterProps,
-  WithAppRouterProps
-} from './hoc/withAppRouter';
-
-
-/* --------
- * Hooks
- * -------- */
 export * from './hooks';
 
-
-/* --------
- * Interfaces
- * -------- */
-export type { default as AppRoute } from './interfaces/AppRoute';
-
-export type { default as AppState } from './interfaces/AppState';
-
-
-/* --------
- * Builder
- * -------- */
-export { default as buildRoutingSystem } from './helpers/buildAppRouter';
-
-export type { AppRoutingSystem } from './helpers/buildAppRouter';
-
-
-/* --------
- * AppRouter Internal Comp
- * -------- */
-export { default as AppLink } from './components/AppLink/AppLink.component';
-
-export type { AppLinkProps } from './components/AppLink/AppLink.interfaces';
+export * from './interfaces';
