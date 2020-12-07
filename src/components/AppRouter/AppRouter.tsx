@@ -379,6 +379,8 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
           hasSidebar                   : isVisible.sidebar,
           hidePageWhileInitiallyLoading: !!hidePageWhileInitiallyLoading,
           hidePageWhileLoading         : !!hidePageWhileLoading,
+          InitialLoader: Components?.InitialLoader,
+          Loader: Components?.Loader,
           pageTitleWhileInitiallyLoading,
           pageTitleWhileLoading,
         },
