@@ -1,5 +1,5 @@
 export type ParamsDefinition = {
-  [param: string]: string
+  [param: string]: string | undefined
 };
 
 export type BaseRoutesDefinition = {
