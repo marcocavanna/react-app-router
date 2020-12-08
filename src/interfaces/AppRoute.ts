@@ -11,7 +11,7 @@ export interface AppRoute<RoutesDefinition extends BaseRoutesDefinition,
   Name extends keyof RoutesDefinition = keyof RoutesDefinition> {
 
   /** The page component to render */
-  component: PageComponent<RoutesDefinition, Name>;
+  component: PageComponent<RoutesDefinition, any>;
 
   /**
    * Set if this route must be reached
