@@ -1,15 +1,17 @@
-import React from 'react';
-
-import { RouteChildrenProps } from 'react-router-dom';
-
 import { BaseRoutesDefinition } from './RoutesDefinition';
+import { PageComponent } from './PageComponent';
 
 
+/**
+ * AppRoute is the main definition used to initialize
+ * routing with AppRouter component.
+ * Each route is described with some useful properties
+ */
 export interface AppRoute<RoutesDefinition extends BaseRoutesDefinition,
   Name extends keyof RoutesDefinition = keyof RoutesDefinition> {
 
   /** The page component to render */
-  component: React.ComponentType<RouteChildrenProps>;
+  component: PageComponent<RoutesDefinition, Name>;
 
   /**
    * Set if this route must be reached

@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import {
   RouteChildrenProps,
   generatePath,
-  Redirect
+  Redirect,
 } from 'react-router-dom';
 
 import {
@@ -19,7 +19,7 @@ import { toggleHTMLNodeClassNames } from '../../utils';
  * Component Declare
  * -------- */
 type PageWrapperComponent = React.FunctionComponent<RouteChildrenProps & {
-  route: AppRoute<any>
+  route: AppRoute<any, any>
 }>;
 
 
@@ -53,6 +53,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
     sideComponentProps,
     getRouteByName,
     useRouteClassName,
+    currentRoute,
   } = useAppRouter();
 
   const {
@@ -130,7 +131,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
   if (typeof isValidRoute === 'function') {
     const userDefinedMandatoryRedirect = isValidRoute(
       route as any,
-      state
+      state,
     );
 
     if (userDefinedMandatoryRedirect) {
@@ -156,7 +157,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
 
   /** If custom assertion doesn't exists, check the auth state and page visibility */
   if (!mandatoryRedirect) {
-    let systemDefinedMandatoryRedirect: string | AppRoute<any> | null = null;
+    let systemDefinedMandatoryRedirect: string | AppRoute<any, any> | null = null;
 
     /**
      * If the page is only public and not hybrid,
@@ -212,7 +213,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
           state   : {
             ...(mandatoryRedirect.state as object),
             redirectedFrom: location.pathname,
-          }
+          },
         }}
       />
     );
@@ -249,6 +250,8 @@ const PageWrapper: PageWrapperComponent = (props) => {
         history={history}
         location={location}
         match={match}
+        appState={state}
+        currentRoute={currentRoute}
       />
     </React.Fragment>
   );
