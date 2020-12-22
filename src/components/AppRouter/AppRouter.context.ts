@@ -47,6 +47,9 @@ export interface AppRouterContext<RoutesDefinition extends BaseRoutesDefinition,
   /** Current Page Layout */
   layout: Layout<RoutesDefinition>;
 
+  /** All defined routes */
+  routes: AppRoute<RoutesDefinition>[];
+
   /** Route to another path */
   routeTo: <Name extends keyof RoutesDefinition>(
     route: Name, params?: RoutesDefinition[Name], state?: History.LocationState,

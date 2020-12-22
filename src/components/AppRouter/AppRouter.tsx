@@ -7,7 +7,7 @@ import {
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch
+  useRouteMatch,
 } from 'react-router-dom';
 
 import { History } from 'history';
@@ -379,11 +379,12 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
           hasSidebar                   : isVisible.sidebar,
           hidePageWhileInitiallyLoading: !!hidePageWhileInitiallyLoading,
           hidePageWhileLoading         : !!hidePageWhileLoading,
-          InitialLoader: Components?.InitialLoader,
-          Loader: Components?.Loader,
+          InitialLoader                : Components?.InitialLoader,
+          Loader                       : Components?.Loader,
           pageTitleWhileInitiallyLoading,
           pageTitleWhileLoading,
         },
+        routes,
         routeTo            : handleRouteTo,
         setAppName,
         setPageTitle       : handleChangePageTitle,
