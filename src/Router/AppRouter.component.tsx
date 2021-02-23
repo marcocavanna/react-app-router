@@ -1,50 +1,58 @@
 import * as React from 'react';
-import clsx from 'clsx';
-
 import {
-  BrowserRouter, generatePath,
-  matchPath, Route,
+  BrowserRouter,
+  Route,
   Switch,
+  generatePath,
+  matchPath,
   useHistory,
-  useLocation,
-  useRouteMatch,
+  useLocation
 } from 'react-router-dom';
 
-import { History } from 'history';
+import clsx from 'clsx';
 
-import {
-  AppRoute,
-  BaseRoutesDefinition,
-  SideComponentProps,
-} from '../../interfaces';
-
-import {
-  AppRouterProps,
-  AppRouterInnerProps,
-} from './AppRouter.types';
-
-import {
-  AppRouterContext,
-  AppRouterProvider,
-} from './AppRouter.context';
+import type {
+  History
+} from 'history';
 
 import {
   getDefaultDefinedRoute,
-  getRouteByName,
   getRouteByPathName,
+  getRouteByName,
+  getRoutesMap
 } from './lib';
 
-import { RouteWatcher } from '../RouteWatcher';
-import { isValidString } from '../../utils';
-import { PageWrapper } from '../PageWrapper';
+import { isValidString } from '../helpers';
+
+import MemoizedNotFoundPage from '../components/404Page';
+import PageWrapper from '../components/PageWrapper';
+import RouteWatcher from '../components/RouteWatcher';
+import SideComponent from '../components/SideComponent';
+
+import { AppRouterProvider } from './AppRouter.context';
+
+import type {
+  AppRoute,
+  AppRouterProps,
+  BaseRoutesDefinition
+} from '../interfaces';
+
+import type { AppRouterContext } from './AppRouter.context';
 
 
 /* --------
- * Main Component Definition
+ * Inner AppRouter Component Props
+ * -------- */
+type AppRouterInnerProps<RoutesDefinition extends BaseRoutesDefinition> = Omit<AppRouterProps<RoutesDefinition>, 'browserRouterProps'>;
+
+
+/* --------
+ * Inner AppRouter Component Definition
  * -------- */
 function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
-  props: React.PropsWithChildren<AppRouterInnerProps<RoutesDefinition>>,
-) {
+  props: React.PropsWithChildren<AppRouterInnerProps<RoutesDefinition>>
+): React.ReactElement<AppRouterInnerProps<RoutesDefinition>> | null {
+
 
   // ----
   // Props Destructuring
@@ -72,22 +80,32 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
     pageTitleSeparator,
     pageTitleWhileInitiallyLoading,
     pageTitleWhileLoading,
-    routes,
+    routes: _routes,
 
     /** Route Watcher Props */
     appendRouteClassNameTo: userDefinedAppendRouteClassNameTo,
     fireOnRouteChangeEventOnMount,
     hashClassNamePrefix,
     onHashChange,
-    useRouteClassName,
+    useRouteClassName
   } = props;
 
 
-  const location = useLocation();
+  const location = useLocation<any>();
   const history = useHistory();
-  const match = useRouteMatch();
 
   const appendRouteClassNameTo = userDefinedAppendRouteClassNameTo || document.body;
+
+
+  // ----
+  // Mapped Routes and Memoized Components
+  // ----
+  const routesMap = React.useMemo(
+    () => getRoutesMap(_routes),
+    [ _routes ]
+  );
+
+  const NotFoundComponent = Components?.NotFound || MemoizedNotFoundPage;
 
 
   // ----
@@ -100,7 +118,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
    * and isPublic or isPrivate route definition
    */
   const userCouldRouteTo = React.useCallback(
-    (route?: AppRoute<RoutesDefinition>) => {
+    (route?: AppRoute<RoutesDefinition, keyof RoutesDefinition>) => {
       /** Prevent if no root exists */
       if (!route) {
         return false;
@@ -113,7 +131,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
 
       return (userHasAuth && (isPrivate || isHybrid)) || (!userHasAuth && (isPublic || isHybrid));
     },
-    [ userHasAuth ],
+    [ userHasAuth ]
   );
 
 
@@ -123,7 +141,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
 
   /** Store the currentRoute */
   const [ currentRoute, setCurrentRoute ] = React.useState(
-    getRouteByPathName(routes, location.pathname, Components),
+    getRouteByPathName<RoutesDefinition, any>(routesMap, location.pathname, NotFoundComponent)
   );
 
   /** Store the App Name */
@@ -141,7 +159,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
         hasFooter : routeHasFooter,
         hasHeader : routeHasHeader,
         hasNavbar : routeHasNavbar = !!(currentRoute.isPrivate && !currentRoute.isPublic),
-        hasSidebar: routeHasSidebar = !!(currentRoute.isPrivate && !currentRoute.isPublic),
+        hasSidebar: routeHasSidebar = !!(currentRoute.isPrivate && !currentRoute.isPublic)
       } = currentRoute ?? {};
 
       /** Compute new value */
@@ -154,7 +172,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
         footer : nextHasFooter,
         header : nextHasHeader,
         navbar : nextHasNavbar,
-        sidebar: nextHasSidebar,
+        sidebar: nextHasSidebar
       };
     },
     [
@@ -162,8 +180,8 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       userDefinedHasFooter,
       userDefinedHasHeader,
       userDefinedHasNavbar,
-      userDefinedHasSidebar,
-    ],
+      userDefinedHasSidebar
+    ]
   );
 
 
@@ -173,7 +191,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
   const handleRouteChange = React.useCallback(
     (pathName: string) => {
       /** Get routing using pathName */
-      const route = getRouteByPathName(routes, pathName, Components);
+      const route = getRouteByPathName<RoutesDefinition, any>(routesMap, pathName, NotFoundComponent);
 
       /** If route is the same, skip updating */
       if (route.name === currentRoute.name) {
@@ -189,31 +207,31 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       }
     },
     [
-      routes,
-      Components,
+      routesMap,
+      NotFoundComponent,
       currentRoute.name,
       onRoutesChange,
       location,
-      history,
-    ],
+      history
+    ]
   );
 
 
   const handleRouteTo = React.useCallback(
     <Name extends keyof RoutesDefinition>(
-      route: Name, params?: RoutesDefinition[Name], state?: History.LocationState,
+      route: Name, params?: RoutesDefinition[Name], state?: History.LocationState
     ) => {
       /** Get the next route */
-      const nextRoute = getRouteByName<RoutesDefinition>(routes, route as string, Components);
+      const nextRoute = getRouteByName<RoutesDefinition, any>(routesMap, route as string, NotFoundComponent);
 
       /** Push the next route */
       history.push(generatePath(nextRoute.path, params), state);
     },
     [
-      Components,
+      NotFoundComponent,
       history,
-      routes,
-    ],
+      routesMap
+    ]
   );
 
 
@@ -226,125 +244,14 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       else {
         document.title = [
           appName,
-          nextTitle,
+          nextTitle
         ].filter(isValidString).join(pageTitleSeparator ?? ' ');
       }
     },
     [
       appName,
-      pageTitleSeparator,
-    ],
-  );
-
-
-  // ----
-  // Build Side Component Props
-  // ----
-  const sideComponentProps = React.useMemo(
-    (): SideComponentProps<RoutesDefinition> => ({
-      appState: {
-        isInitiallyLoading: !!isInitiallyLoading,
-        isLoading         : !!isLoading,
-        userHasAuth       : !!userHasAuth,
-      },
-      currentRoute,
-      history,
-      location,
-      match,
-    }),
-    [
-      currentRoute,
-      history,
-      isInitiallyLoading,
-      isLoading,
-      location,
-      match,
-      userHasAuth,
-    ],
-  );
-
-
-  // ----
-  // Memoized Components
-  // ----
-  const NavBarComponent = Components && Components.Navbar;
-  const navBarElement = React.useMemo(
-    () => {
-      if (!isVisible.navbar || !NavBarComponent) {
-        return null;
-      }
-
-      return (
-        <NavBarComponent
-          {...sideComponentProps}
-        />
-      );
-    },
-    [
-      NavBarComponent,
-      isVisible.navbar,
-      sideComponentProps,
-    ],
-  );
-
-  const HeaderComponent = Components && Components.Header;
-  const headerElement = React.useMemo(
-    () => {
-      if (!isVisible.header || !HeaderComponent) {
-        return null;
-      }
-
-      return (
-        <HeaderComponent
-          {...sideComponentProps}
-        />
-      );
-    },
-    [
-      HeaderComponent,
-      isVisible.header,
-      sideComponentProps,
-    ],
-  );
-
-  const SidebarElement = Components && Components.Sidebar;
-  const sidebarElement = React.useMemo(
-    () => {
-      if (!isVisible.sidebar || !SidebarElement) {
-        return null;
-      }
-
-      return (
-        <SidebarElement
-          {...sideComponentProps}
-        />
-      );
-    },
-    [
-      SidebarElement,
-      isVisible.sidebar,
-      sideComponentProps,
-    ],
-  );
-
-  const FooterElement = Components && Components.Footer;
-  const footerElement = React.useMemo(
-    () => {
-      if (!isVisible.footer || !FooterElement) {
-        return null;
-      }
-
-      return (
-        <FooterElement
-          {...sideComponentProps}
-        />
-      );
-    },
-    [
-      FooterElement,
-      isVisible.footer,
-      sideComponentProps,
-    ],
+      pageTitleSeparator
+    ]
   );
 
 
@@ -364,13 +271,17 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
           params : (pathMatcher?.params ?? {}) as any,
           route  : currentRoute,
           search : new URLSearchParams(location.search),
-          url    : pathMatcher?.url ?? location.pathname,
+          url    : pathMatcher?.url ?? location.pathname
         },
-        defaultPrivateRoute: getDefaultDefinedRoute(routes, 'private'),
-        defaultPublicRoute : getDefaultDefinedRoute(routes, 'public'),
+        defaultPrivateRoute: getDefaultDefinedRoute(routesMap, 'private'),
+        defaultPublicRoute : getDefaultDefinedRoute(routesMap, 'public'),
         isValidRoute,
-        getRouteByName     : (name: string) => getRouteByName(routes, name, Components),
-        getRouteByPathName : (path: string) => getRouteByPathName(routes, path, Components),
+        getRouteByName     : <Route extends keyof RoutesDefinition>(name: Route) => (
+          getRouteByName<RoutesDefinition, any>(routesMap, name, NotFoundComponent)
+        ),
+        getRouteByPathName : (path: string) => (
+          getRouteByPathName<RoutesDefinition, any>(routesMap, path, NotFoundComponent)
+        ),
         layout             : {
           appendRouteClassNameTo,
           hasFooter                    : isVisible.footer,
@@ -382,24 +293,32 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
           InitialLoader                : Components?.InitialLoader,
           Loader                       : Components?.Loader,
           pageTitleWhileInitiallyLoading,
-          pageTitleWhileLoading,
+          pageTitleWhileLoading
         },
-        routes,
+        routes             : routesMap,
         routeTo            : handleRouteTo,
         setAppName,
         setPageTitle       : handleChangePageTitle,
-        sideComponentProps,
-        state              : sideComponentProps.appState,
-        useRouteClassName  : !!useRouteClassName,
+        state              : {
+          isInitiallyLoading: !!isInitiallyLoading,
+          isLoading         : !!isLoading,
+          userHasAuth       : !!userHasAuth,
+          usersPermissions  : undefined
+        },
+        useRouteClassName  : !!useRouteClassName
       };
     },
     [
+      NotFoundComponent,
+      routesMap,
+      isInitiallyLoading,
+      isLoading,
+      userHasAuth,
       handleRouteTo,
       location.pathname,
       location.search,
       currentRoute,
       userCouldRouteTo,
-      routes,
       isValidRoute,
       appendRouteClassNameTo,
       isVisible.footer,
@@ -411,10 +330,9 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       pageTitleWhileInitiallyLoading,
       pageTitleWhileLoading,
       handleChangePageTitle,
-      sideComponentProps,
       useRouteClassName,
-      Components,
-    ],
+      Components
+    ]
   );
 
 
@@ -439,61 +357,46 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
         onRouteChange={handleRouteChange}
       />
 
-      {navBarElement}
+      <SideComponent isVisible={isVisible.navbar} Component={Components?.Navbar} />
 
-      {sidebarElement}
+      <SideComponent isVisible={isVisible.sidebar} Component={Components?.Sidebar} />
 
       <div className={viewClasses}>
 
-        {headerElement}
+        <SideComponent isVisible={isVisible.header} Component={Components?.Header} />
 
         <div className={pageClasses}>
           <Switch>
-            {/* Build each single route */}
-            {routes.map((route) => (
+            {Array.from(routesMap.values()).map((route) => (
               <Route
-                key={route.name as string}
+                key={route.name as React.ReactText}
                 path={route.path}
                 exact={route.exact}
                 sensitive={route.sensitive}
                 strict={route.strict}
-              >
-                {(routeProps) => (
-                  <PageWrapper
-                    {...routeProps}
-                    route={route}
-                  />
-                )}
-              </Route>
+                component={PageWrapper}
+              />
             ))}
 
-            {/* Build the Not Found route */}
-            {Components?.NotFound && (
-              <Route>
-                {(routeProps) => (
-                  <PageWrapper
-                    {...routeProps}
-                    route={{
-                      name     : '__not_found_internal_component__',
-                      path     : '/',
-                      exact    : false,
-                      component: Components.NotFound!,
-                      isPublic : true,
-                      isPrivate: true,
-                    }}
-                  />
-                )}
-              </Route>
-            )}
+            <Route
+              render={(routeProps) => (
+                <NotFoundComponent
+                  {...routeProps}
+                  appState={appRouterContext.state}
+                  currentRoute={appRouterContext.currentRoute}
+                />
+              )}
+            />
           </Switch>
         </div>
 
-        {footerElement}
+        <SideComponent isVisible={isVisible.footer} Component={Components?.Footer} />
 
       </div>
 
     </AppRouterProvider>
   );
+
 }
 
 AppRouterInner.displayName = 'AppRouterInner';
@@ -503,7 +406,7 @@ AppRouterInner.defaultProps = {
   hidePageWhileLoading          : false,
   routes                        : [],
   pageTitleSeparator            : ' | ',
-  pageTitleWhileInitiallyLoading: 'Loading...',
+  pageTitleWhileInitiallyLoading: 'Loading...'
 };
 
 
@@ -511,7 +414,7 @@ AppRouterInner.defaultProps = {
  * Wrap App Router with Router
  * -------- */
 function AppRouter<RoutesDefinition extends BaseRoutesDefinition>(
-  props: React.PropsWithChildren<AppRouterProps<RoutesDefinition>>,
+  props: React.PropsWithChildren<AppRouterProps<RoutesDefinition>>
 ) {
   /** Strip Browser Router Props */
   const {

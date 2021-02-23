@@ -1,24 +1,60 @@
 import * as React from 'react';
-
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import slugify from 'slugify';
 
-import {
-  isValidString,
-  toggleHTMLNodeClassNames,
-  ClassNameToggler,
-} from '../../utils';
+import type { History, Location } from 'history';
 
-import { useAppRouter } from '../AppRouter/AppRouter.context';
+import { useAppRouter } from '../Router/AppRouter.context';
+import { isValidString, toggleHTMLNodeClassNames } from '../helpers';
 
-import { RouteWatcherProps } from './RouteWatcher.types';
+import type { ClassNameToggler } from '../helpers';
 
 
 /* --------
- * Component Declare
+ * Component Interfaces
  * -------- */
-type RouteWatcherComponent = React.FunctionComponent<RouteWatcherProps>;
+export interface RouteWatcherProps {
+  /**
+   * Set manually the HTML Node where route classname are appended,
+   * falling back to `<body>` element.
+   *
+   * This option will be considered only with `useRouteClassName`
+   * to set the slugified classname of current route.
+   *
+   * Default to `document.body`
+   */
+  appendRouteClassNameTo?: HTMLElement;
+
+  /** Fire the onRouteChange event on Component Mount */
+  fireOnRouteChangeEventOnMount?: boolean;
+
+  /**
+   * Hash Class Prefix is a string prepended to current
+   * hash while setting the route class name.
+   * This option will be considered only with `useRouteClassName`
+   * to set the slugified classname of current hash.
+   *
+   * ---
+   *
+   * Default to `hash-`
+   */
+  hashClassNamePrefix?: string;
+
+  /** Handler callback invoked each time hash changed */
+  onHashChange?(current: string, location: Location, history: History): void;
+
+  /**
+   * Handler callback invoked on route changed
+   * When a route change event occurred the onHashChange event
+   * will not be fired, even if hash has changed.
+   * It will only be called internally to remove className if ´useRouteClassName´ is used.
+   */
+  onRouteChange?(current: string, location: Location, history: History): void;
+
+  /** Set the current route slug class on app mount node element */
+  useRouteClassName?: boolean;
+}
 
 
 /* --------
@@ -33,14 +69,14 @@ type RouteWatcherState = {
 /* --------
  * Component Definition
  * -------- */
-const RouteWatcher: RouteWatcherComponent = (props) => {
+const RouteWatcher: React.FunctionComponent<RouteWatcherProps> = (props) => {
 
   const {
     appendRouteClassNameTo,
     fireOnRouteChangeEventOnMount,
     hashClassNamePrefix,
     onRouteChange,
-    onHashChange,
+    onHashChange
   } = props;
 
 
@@ -58,16 +94,16 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
   const [
     {
       pathName: currPathName,
-      hash    : currHash,
-    }, setCurrentRoute,
+      hash    : currHash
+    }, setCurrentRoute
   ] = React.useState<RouteWatcherState>({
     pathName: null,
-    hash    : null,
+    hash    : null
   });
 
   /** Initialize an Internal State to Check if component is mounted */
   const [
-    isMounted, setMounted,
+    isMounted, setMounted
   ] = React.useState<boolean>(true);
 
   /** Save the Element to Append Class Name */
@@ -85,10 +121,10 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
 
       setCurrentRoute((curr) => ({
         ...curr,
-        pathName,
+        pathName
       }));
     },
-    [ setCurrentRoute, currPathName ],
+    [ setCurrentRoute, currPathName ]
   );
 
   const setCurrentHash = React.useCallback(
@@ -99,10 +135,10 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
 
       setCurrentRoute((curr) => ({
         ...curr,
-        hash,
+        hash
       }));
     },
-    [ setCurrentRoute, currHash ],
+    [ setCurrentRoute, currHash ]
   );
 
 
@@ -115,7 +151,7 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
         setMounted(false);
       };
     },
-    [],
+    []
   );
 
   /** PathName Change */
@@ -158,8 +194,8 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
       location,
       onRouteChange,
       setCurrentPathName,
-      appRouter.useRouteClassName,
-    ],
+      appRouter.useRouteClassName
+    ]
   );
 
   /** Hash Change */
@@ -169,7 +205,7 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
       if (htmlClassNameNode && appRouter.useRouteClassName) {
         toggleHTMLNodeClassNames(htmlClassNameNode, {
           [`${hashClassNamePrefix}${slugify(currHash ?? '')}`]     : false,
-          [`${hashClassNamePrefix}${slugify(location.hash ?? '')}`]: false,
+          [`${hashClassNamePrefix}${slugify(location.hash ?? '')}`]: false
         });
       }
 
@@ -189,8 +225,8 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
       isMounted,
       location,
       onHashChange,
-      setCurrentHash,
-    ],
+      setCurrentHash
+    ]
   );
 
   // ----
@@ -202,7 +238,7 @@ const RouteWatcher: RouteWatcherComponent = (props) => {
 
 RouteWatcher.defaultProps = {
   fireOnRouteChangeEventOnMount: true,
-  hashClassNamePrefix          : 'hash-',
+  hashClassNamePrefix          : 'hash-'
 };
 
 RouteWatcher.displayName = 'RouteWatcher';

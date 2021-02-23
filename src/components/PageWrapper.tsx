@@ -2,37 +2,30 @@ import * as React from 'react';
 import invariant from 'tiny-invariant';
 
 import {
-  RouteChildrenProps,
+  RouteComponentProps,
   generatePath,
   Redirect,
 } from 'react-router-dom';
 
 import {
   useAppRouter,
-} from '../AppRouter/AppRouter.context';
+} from '../Router/AppRouter.context';
 
-import { AppRoute, StrictMandatoryRedirect } from '../../interfaces';
-import { toggleHTMLNodeClassNames } from '../../utils';
+import SideComponent from './SideComponent';
 
-
-/* --------
- * Component Declare
- * -------- */
-type PageWrapperComponent = React.FunctionComponent<RouteChildrenProps & {
-  route: AppRoute<any, any>
-}>;
+import { AppRoute, StrictMandatoryRedirect } from '../interfaces';
+import { toggleHTMLNodeClassNames } from '../helpers';
 
 
 /* --------
  * Component Definition
  * -------- */
-const PageWrapper: PageWrapperComponent = (props) => {
+const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) => {
 
   const {
     history,
     match,
     location,
-    route,
   } = props;
 
 
@@ -50,7 +43,6 @@ const PageWrapper: PageWrapperComponent = (props) => {
     defaultPrivateRoute,
     defaultPublicRoute,
     setPageTitle,
-    sideComponentProps,
     getRouteByName,
     useRouteClassName,
     currentRoute,
@@ -60,7 +52,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
     isPrivate,
     isPublic,
     component: Component,
-  } = route;
+  } = currentRoute.route;
 
   const isHybrid = (isPrivate && isPublic) || (!isPrivate && !isPublic);
 
@@ -75,11 +67,10 @@ const PageWrapper: PageWrapperComponent = (props) => {
       }
 
       return (
-        <InitialLoader {...sideComponentProps} />
+        <SideComponent isVisible={true} Component={InitialLoader} />
       );
     },
     [
-      sideComponentProps,
       InitialLoader,
       state.isInitiallyLoading,
     ],
@@ -92,11 +83,10 @@ const PageWrapper: PageWrapperComponent = (props) => {
       }
 
       return (
-        <Loader {...sideComponentProps} />
+        <SideComponent isVisible={true} Component={Loader} />
       );
     },
     [
-      sideComponentProps,
       Loader,
       state.isLoading,
     ],
@@ -125,14 +115,11 @@ const PageWrapper: PageWrapperComponent = (props) => {
    * or any loader components check if user
    * could reach this route
    */
-  let mandatoryRedirect: StrictMandatoryRedirect<any> | null = null;
+  let mandatoryRedirect: StrictMandatoryRedirect<any, any> | null = null;
 
   /** Call the getNextRoute function first if exists */
   if (typeof isValidRoute === 'function') {
-    const userDefinedMandatoryRedirect = isValidRoute(
-      route as any,
-      state,
-    );
+    const userDefinedMandatoryRedirect = isValidRoute(currentRoute.route, state);
 
     if (userDefinedMandatoryRedirect) {
       if (typeof (userDefinedMandatoryRedirect as string) === 'string') {
@@ -146,7 +133,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
       }
       else {
         mandatoryRedirect = {
-          ...(userDefinedMandatoryRedirect as StrictMandatoryRedirect<any>),
+          ...(userDefinedMandatoryRedirect as StrictMandatoryRedirect<any, any>),
           state: {
             redirectedBy: 'user',
           },
@@ -224,7 +211,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
     setPageTitle(layout.pageTitleWhileLoading);
   }
   else {
-    setPageTitle(route.title);
+    setPageTitle(currentRoute.route.title);
   }
 
   /** Render loaders if they are hiding page */
@@ -243,7 +230,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
 
   /** Return the wrapped page */
   return (
-    <React.Fragment>
+    <React.Suspense fallback={null}>
       {initialLoaderElement}
       {loaderElement}
       <Component
@@ -253,7 +240,7 @@ const PageWrapper: PageWrapperComponent = (props) => {
         appState={state}
         currentRoute={currentRoute}
       />
-    </React.Fragment>
+    </React.Suspense>
   );
 };
 

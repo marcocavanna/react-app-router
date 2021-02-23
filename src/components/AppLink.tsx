@@ -1,15 +1,15 @@
 import * as React from 'react';
-
 import { generatePath, Link, NavLink, NavLinkProps } from 'react-router-dom';
 
-import { AppRoute, BaseRoutesDefinition } from '../../interfaces';
-import { useAppRouter } from '../AppRouter';
+import { useAppRouter } from '../Router/AppRouter.context';
+
+import type { AppRoute, BaseRoutesDefinition } from '../interfaces';
 
 
 /* --------
  * Component Interfaces
  * -------- */
-export interface AppLinkProps<RoutesDefinition extends BaseRoutesDefinition, Route extends keyof RoutesDefinition>
+export interface AppLinkProps<RoutesDefinition extends BaseRoutesDefinition, Name extends keyof RoutesDefinition>
   extends Omit<NavLinkProps, 'to'> {
   /** Render the link as NavLink */
   asNavLink?: boolean;
@@ -18,7 +18,7 @@ export interface AppLinkProps<RoutesDefinition extends BaseRoutesDefinition, Rou
   className?: string;
 
   /** Route Params */
-  params?: RoutesDefinition[Route];
+  params?: RoutesDefinition[Name];
 
   /**
    * By default, a AppLink will be rendered
@@ -33,16 +33,16 @@ export interface AppLinkProps<RoutesDefinition extends BaseRoutesDefinition, Rou
   renderAnyway?: boolean;
 
   /** Route name. Must be one of the defined route of AppRouter component */
-  to: Route;
+  to: Name;
 
   /** Any Other Props */
   [other: string]: any;
 }
 
 
-type NextRoute<RoutesDefinition extends BaseRoutesDefinition> = {
+type NextRoute<RoutesDefinition extends BaseRoutesDefinition, Name extends keyof RoutesDefinition> = {
   couldRoute: boolean;
-  route: AppRoute<RoutesDefinition>;
+  route: AppRoute<RoutesDefinition, Name>;
   path: string;
 };
 
@@ -50,9 +50,9 @@ type NextRoute<RoutesDefinition extends BaseRoutesDefinition> = {
 /* --------
  * Component Definition
  * -------- */
-function AppLink<RoutesDefinition extends BaseRoutesDefinition, RouteName extends keyof RoutesDefinition>(
-  props: React.PropsWithChildren<AppLinkProps<RoutesDefinition, RouteName>>,
-) {
+function AppLink<RoutesDefinition extends BaseRoutesDefinition, Name extends keyof RoutesDefinition>(
+  props: React.PropsWithChildren<AppLinkProps<RoutesDefinition, Name>>
+): React.ReactElement<AppLinkProps<RoutesDefinition, Name>> | null {
 
   const {
     asNavLink,
@@ -64,26 +64,26 @@ function AppLink<RoutesDefinition extends BaseRoutesDefinition, RouteName extend
 
   const {
     getRouteByName,
-    couldRouteTo,
-  } = useAppRouter<RoutesDefinition, RouteName>();
+    couldRouteTo
+  } = useAppRouter<RoutesDefinition, Name>();
 
   const next = React.useMemo(
-    (): NextRoute<RoutesDefinition> => {
+    (): NextRoute<RoutesDefinition, any> => {
       /** Get the route using name */
       const route = getRouteByName(to as string);
 
       return {
         route,
         couldRoute: couldRouteTo(route),
-        path      : generatePath(route.path, params),
+        path      : generatePath(route.path, params || {})
       };
     },
     [
       to,
       getRouteByName,
       couldRouteTo,
-      params,
-    ],
+      params
+    ]
   );
 
   /** Check if component could be rendered */
@@ -104,4 +104,4 @@ function AppLink<RoutesDefinition extends BaseRoutesDefinition, RouteName extend
 
 AppLink.displayName = 'AppLink';
 
-export { AppLink };
+export default AppLink;

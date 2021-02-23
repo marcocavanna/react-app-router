@@ -1,9 +1,10 @@
 import * as React from 'react';
 import invariant from 'tiny-invariant';
 
-import { useAppRouter, AppRouterContext, CurrentRoute } from '../components/AppRouter';
+import { useAppRouter } from './Router/AppRouter.context';
+import type { AppRouterContext } from './Router/AppRouter.context';
 
-import { AppState, BaseRoutesDefinition } from '../interfaces';
+import type { AppState, BaseRoutesDefinition, CurrentRoute } from './interfaces';
 
 
 /* --------
@@ -12,17 +13,17 @@ import { AppState, BaseRoutesDefinition } from '../interfaces';
 
 function useAppRouterTools<RoutesDefinition extends BaseRoutesDefinition,
   CurrentRoute extends keyof RoutesDefinition = keyof RoutesDefinition>(
-  hook: string,
+  hook: string
 ): AppRouterContext<RoutesDefinition, CurrentRoute> {
 
   if (process.env.NODE_ENV === 'development') {
     invariant(
       typeof React.useContext === 'function',
-      `You must use React >= 16.8 in order to use '${hook}'()`,
+      `You must use React >= 16.8 in order to use '${hook}'()`
     );
   }
 
-  return useAppRouter() as unknown as AppRouterContext<RoutesDefinition, CurrentRoute>;
+  return useAppRouter();
 }
 
 
