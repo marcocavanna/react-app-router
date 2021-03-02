@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { generatePath, Link, NavLink, NavLinkProps } from 'react-router-dom';
+import * as qs from 'qs';
 
 import { useAppRouter } from '../Router/AppRouter.context';
 
@@ -32,6 +33,9 @@ export interface AppLinkProps<RoutesDefinition extends BaseRoutesDefinition, Nam
    */
   renderAnyway?: boolean;
 
+  /** Add query string to url */
+  query?: Record<string, string | number | boolean | (string | number | boolean)[]>
+
   /** Route name. Must be one of the defined route of AppRouter component */
   to: Name;
 
@@ -51,12 +55,13 @@ type NextRoute<RoutesDefinition extends BaseRoutesDefinition, Name extends keyof
  * Component Definition
  * -------- */
 function AppLink<RoutesDefinition extends BaseRoutesDefinition, Name extends keyof RoutesDefinition>(
-  props: React.PropsWithChildren<AppLinkProps<RoutesDefinition, Name>>
+  props: React.PropsWithChildren<AppLinkProps<RoutesDefinition, Name>>,
 ): React.ReactElement<AppLinkProps<RoutesDefinition, Name>> | null {
 
   const {
     asNavLink,
     to,
+    query,
     params,
     renderAnyway,
     ...rest
@@ -64,8 +69,22 @@ function AppLink<RoutesDefinition extends BaseRoutesDefinition, Name extends key
 
   const {
     getRouteByName,
-    couldRouteTo
+    couldRouteTo,
   } = useAppRouter<RoutesDefinition, Name>();
+
+  const queryString = React.useMemo(
+    (): string => {
+      if (!query) {
+        return '';
+      }
+
+      return qs.stringify(query, {
+        addQueryPrefix: true,
+        arrayFormat   : 'brackets',
+      });
+    },
+    [ query ],
+  );
 
   const next = React.useMemo(
     (): NextRoute<RoutesDefinition, any> => {
@@ -75,15 +94,16 @@ function AppLink<RoutesDefinition extends BaseRoutesDefinition, Name extends key
       return {
         route,
         couldRoute: couldRouteTo(route),
-        path      : generatePath(route.path, params || {})
+        path      : `${generatePath(route.path, params || {})}${queryString}`,
       };
     },
     [
       to,
+      queryString,
       getRouteByName,
       couldRouteTo,
-      params
-    ]
+      params,
+    ],
   );
 
   /** Check if component could be rendered */
