@@ -6,12 +6,13 @@ export { default as AppLink } from './components/AppLink';
 
 export {
   useCurrentRoute,
-  useAppRouterState
+  useAppRouterState,
+  usePageTitle,
 } from './hooks';
 
 export type { AppLinkProps } from './components/AppLink';
 
 export type {
   AppRoute,
-  PageComponent
+  PageComponent,
 } from './interfaces';
