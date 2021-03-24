@@ -100,12 +100,22 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
   // ----
   // Mapped Routes and Memoized Components
   // ----
+  /** Map all Routes */
   const routesMap = React.useMemo(
     () => getRoutesMap(_routes),
     [ _routes ]
   );
 
+  /** Set the Not Found Component */
   const NotFoundComponent = Components?.NotFound || MemoizedNotFoundPage;
+
+  /** Store the currentRoute */
+  const currentRoute = React.useMemo(
+    () => (
+      getRouteByPathName<RoutesDefinition, any>(routesMap, location.pathname, NotFoundComponent)
+    ),
+    [ routesMap, location.pathname, NotFoundComponent ]
+  );
 
 
   // ----
@@ -138,11 +148,6 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
   // ----
   // Internal State and Visibility
   // ----
-
-  /** Store the currentRoute */
-  const [ currentRoute, setCurrentRoute ] = React.useState(
-    getRouteByPathName<RoutesDefinition, any>(routesMap, location.pathname, NotFoundComponent)
-  );
 
   /** Store the App Name */
   const [ appName, setAppName ] = React.useState(userDefinedDefaultAppName);
@@ -197,9 +202,6 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       if (route.name === currentRoute.name) {
         return;
       }
-
-      /** Update the Route State */
-      setCurrentRoute(route);
 
       /** Call onRouteChange handler */
       if (typeof onRoutesChange === 'function') {
@@ -309,6 +311,7 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       };
     },
     [
+      currentRoute,
       NotFoundComponent,
       routesMap,
       isInitiallyLoading,
@@ -317,7 +320,6 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
       handleRouteTo,
       location.pathname,
       location.search,
-      currentRoute,
       userCouldRouteTo,
       isValidRoute,
       appendRouteClassNameTo,

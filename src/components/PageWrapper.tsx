@@ -4,11 +4,11 @@ import invariant from 'tiny-invariant';
 import {
   RouteComponentProps,
   generatePath,
-  Redirect,
+  Redirect
 } from 'react-router-dom';
 
 import {
-  useAppRouter,
+  useAppRouter
 } from '../Router/AppRouter.context';
 
 import SideComponent from './SideComponent';
@@ -25,7 +25,7 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
   const {
     history,
     match,
-    location,
+    location
   } = props;
 
 
@@ -45,13 +45,13 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
     setPageTitle,
     getRouteByName,
     useRouteClassName,
-    currentRoute,
+    currentRoute
   } = useAppRouter();
 
   const {
     isPrivate,
     isPublic,
-    component: Component,
+    component: Component
   } = currentRoute.route;
 
   const isHybrid = (isPrivate && isPublic) || (!isPrivate && !isPublic);
@@ -72,8 +72,8 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
     },
     [
       InitialLoader,
-      state.isInitiallyLoading,
-    ],
+      state.isInitiallyLoading
+    ]
   );
 
   const loaderElement = React.useMemo(
@@ -88,8 +88,8 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
     },
     [
       Loader,
-      state.isLoading,
-    ],
+      state.isLoading
+    ]
   );
 
 
@@ -127,16 +127,16 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
           route : userDefinedMandatoryRedirect as string,
           params: {},
           state : {
-            redirectedBy: 'user',
-          },
+            redirectedBy: 'user'
+          }
         };
       }
       else {
         mandatoryRedirect = {
           ...(userDefinedMandatoryRedirect as StrictMandatoryRedirect<any, any>),
           state: {
-            redirectedBy: 'user',
-          },
+            redirectedBy: 'user'
+          }
         };
       }
     }
@@ -169,8 +169,8 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
         route : systemDefinedMandatoryRedirect,
         params: {},
         state : {
-          redirectedBy: 'system',
-        },
+          redirectedBy: 'system'
+        }
       };
     }
   }
@@ -188,7 +188,7 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
       typeof routePath === 'string',
       `Route path has not been found for '${typeof mandatoryRedirect.route === 'string'
         ? mandatoryRedirect.route
-        : mandatoryRedirect.route.name}'`,
+        : mandatoryRedirect.route.name}'`
     );
 
     const nextPath = generatePath(routePath, mandatoryRedirect.params);
@@ -199,8 +199,8 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
           pathname: nextPath,
           state   : {
             ...(mandatoryRedirect.state as object),
-            redirectedFrom: location.pathname,
-          },
+            redirectedFrom: location.pathname
+          }
         }}
       />
     );
@@ -224,7 +224,7 @@ const PageWrapper: React.FunctionComponent<RouteComponentProps<any>> = (props) =
     toggleHTMLNodeClassNames(layout.appendRouteClassNameTo!, {
       'has-auth'    : state.userHasAuth,
       'with-sidebar': layout.hasSidebar,
-      'with-navbar' : layout.hasNavbar,
+      'with-navbar' : layout.hasNavbar
     });
   }
 
