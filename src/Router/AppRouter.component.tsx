@@ -275,8 +275,8 @@ function AppRouterInner<RoutesDefinition extends BaseRoutesDefinition>(
           search : new URLSearchParams(location.search),
           url    : pathMatcher?.url ?? location.pathname
         },
-        defaultPrivateRoute: getDefaultDefinedRoute(routesMap, 'private'),
-        defaultPublicRoute : getDefaultDefinedRoute(routesMap, 'public'),
+        defaultPrivateRoute: getDefaultDefinedRoute(routesMap, 'private', NotFoundComponent),
+        defaultPublicRoute : getDefaultDefinedRoute(routesMap, 'public', NotFoundComponent),
         isValidRoute,
         getRouteByName     : <Route extends keyof RoutesDefinition>(name: Route) => (
           getRouteByName<RoutesDefinition, any>(routesMap, name, NotFoundComponent)
