@@ -1,6 +1,6 @@
 {
   "name": "@appbuckets/app-router",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "description": "An AppState and AppRoute wrapper of react-router-dom with AuthState",
   "keywords": [
     "react",
@@ -41,8 +41,8 @@
     "postbuild": "npm run build:declaration && npm run build:prettier"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": ">=16",
+    "react-dom": ">=16",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
