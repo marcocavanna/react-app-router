@@ -15,4 +15,7 @@ export type { AppLinkProps } from './components/AppLink';
 export type {
   AppRoute,
   PageComponent,
+  IsValidRouteChecker,
+  AppState,
+  MandatoryRedirect
 } from './interfaces';
